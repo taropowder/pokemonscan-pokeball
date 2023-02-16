@@ -1,0 +1,6 @@
+[submodule "images/enscan/src"]
+	path = images/enscan/src
+	url = https://github.com/wgpsec/ENScan_GO.git
+[submodule "images/oneforall"]
+	path = images/oneforall
+	url = https://github.com/shmilylty/OneForAll.git

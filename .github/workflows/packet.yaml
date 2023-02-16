@@ -1,0 +1,28 @@
+name: Build Server Artifact
+on:
+  #监听push操作
+  push:
+    branches:
+      # master分支，你也可以改成其他分支
+      - master
+      - main
+jobs:
+  server:
+    # runs-on 指定job任务运行所需要的虚拟机环境(必填字段)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.19
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: build
+        run: mkdir build  && tar -czf  build/server.tar.gz -C script/install/ .
+      - name: Server Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: server
+          path: build/server.tar.gz
+          retention-days: 1

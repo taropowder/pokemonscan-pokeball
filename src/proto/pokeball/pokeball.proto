@@ -1,0 +1,165 @@
+syntax = "proto3";
+package pokemon.proto.pokeball;
+option go_package = "pokemon/proto/pokeball";
+
+
+service TaskService {
+
+  rpc Heartbeat(HeartbeatArgs) returns (HeartbeatReply);
+  rpc GetTask(GetTaskArgs) returns (GetTaskReply);
+  rpc ContinueTask(GetTaskArgs) returns (ContinueTaskReply);
+  rpc GetRegisteredConfig(GetRegisteredConfigArgs) returns (GetRegisteredConfigReply);
+  rpc ReportInfoResult(ReportInfoArgs) returns (ReportInfoReply);
+  rpc ReportVulResult(ReportVulArgs) returns (ReportVulReply);
+  rpc ReportCompletionStatus(CompletionStatusArgs) returns (CompletionStatusReply);
+
+}
+
+message HeartbeatArgs {
+  // 此 pokeball 工作状态
+  string status = 1;
+  //  repeated int32 taskIds = 2;
+  string hash = 2;
+  //  正在工作的插件
+  repeated TaskArgs tasks = 3;
+  //  cpu 占用
+  int32 cpu = 4;
+  // 内存 占用
+  int32 mem = 5;
+}
+
+message TaskArgs {
+
+  int32 taskId = 1;
+  string plugin = 2;
+
+}
+
+message HeartbeatReply {
+
+  //  执行操作
+  string Instruction = 1;
+
+}
+
+
+message GetTaskArgs{
+  string hash = 1;
+}
+
+message GetTaskReply{
+  int32 taskId = 1;
+  string TaskConfig = 2;
+}
+
+message ContinueTaskReply{
+  repeated TaskArgs tasks = 1;
+}
+
+message GetRegisteredConfigArgs{
+  string hash = 1;
+  int32 ConfigId = 2;
+  string version = 3;
+}
+
+message GetRegisteredConfigReply{
+  string RegisteredConfig = 1;
+}
+
+message ReportInfoArgs {
+  //  上报目前收集到的所有资产信息
+  int32 taskId = 1;
+  repeated UrlInfo urls = 2;
+  repeated HostInfo hosts = 3;
+  repeated WebsiteInfo websites = 4;
+  repeated DomainInfo domains = 5;
+  repeated ExtraInfo extras = 6;
+}
+
+message ReportInfoReply {
+
+}
+
+message CompletionStatusArgs {
+  //  上报完成的任务
+  int32 taskId = 1;
+}
+
+message CompletionStatusReply {
+
+}
+
+message HostInfo {
+
+  string host = 1;
+  repeated HostService hostService = 2;
+  string plugin = 3;
+
+}
+
+message HostService {
+
+  int32 port = 1;
+  string name = 2;
+
+}
+
+message UrlInfo {
+  string url = 1;
+  string method = 2;
+  string body = 3;
+  string headers = 4;
+  string tag = 5;
+  string hit = 6;
+
+}
+
+message WebsiteInfo {
+  string url = 1;
+  string title = 2;
+  string fingerprint = 3;
+  int32 statusCode = 4;
+  int32 length = 5;
+  string server = 6;
+  string address = 7;
+  int32 isCDN = 8;
+  string asn = 9;
+  string org = 10;
+  string plugin = 11;
+  string respHash = 12;
+}
+
+message DomainInfo {
+  string name = 1;
+  string ip = 2;
+  string cname = 3;
+  string plugin = 4;
+  bool root = 5;
+}
+
+message ReportVulArgs {
+  //  上报目前收集到的所有资产信息
+  int32 taskId = 1;
+  repeated VulInfo vuls = 2;
+}
+
+message ReportVulReply {
+
+}
+
+message VulInfo {
+
+  string type = 1;
+  string url = 2;
+  string plugin = 3;
+  string detail = 4;
+
+}
+
+message ExtraInfo{
+  string type = 1;
+  string short = 2;
+  string detail = 3;
+  string plugin = 4;
+
+}

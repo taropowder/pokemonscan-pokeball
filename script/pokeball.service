@@ -1,0 +1,13 @@
+[Unit]
+Description=pokeball agent
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/opt/pokeball/bin/pokeball.sh start
+Restart=always
+RestartSec=20s
+
+[Install]
+WantedBy=multi-user.target

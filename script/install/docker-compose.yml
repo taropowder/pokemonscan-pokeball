@@ -1,0 +1,26 @@
+version: '3'
+services:
+  redis:
+    image: redis:latest
+    restart: always
+    container_name: pokemon_redis
+    command:
+      --requirepass "pokemon@redis@#@&"
+  postgresql:
+    image: postgres
+    restart: always
+    volumes:
+      - ./data/pgsql:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: pokemon
+      POSTGRES_PASSWORD: pokemon@pgsql@!#@&
+      POSTGRES_DB: pokemon
+  server:
+    image: taropowder/daycare:latest
+    container_name: pokemon_daycare
+    restart: always
+    ports:
+      - "2314:2314"
+      - "9213:9213"
+    volumes:
+      - ./config:/app/config
