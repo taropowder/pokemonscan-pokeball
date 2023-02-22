@@ -77,7 +77,7 @@ images_init(){
   for IMAGE in  "${POKEBALL_IMAGES[@]}"
   do
     # pull images
-    docker pull "taropowder/$IMAGE"
+    docker pull "pokemonscan/$IMAGE"
   done
 
 
