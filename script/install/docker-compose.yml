@@ -16,7 +16,7 @@ services:
       POSTGRES_PASSWORD: pokemon@pgsql@!#@&
       POSTGRES_DB: pokemon
   server:
-    image: taropowder/daycare:latest
+    image: pokemonscan/daycare:latest
     container_name: pokemon_daycare
     restart: always
     ports:
