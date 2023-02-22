@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - plugin_*
+      - master
 
 jobs:
   xray:
@@ -30,7 +31,7 @@ jobs:
         with:
           context: images/xray
           push: true
-          tags: taropowder/pokeball_xray:latest
+          tags: pokemonscan/pokeball_xray:latest
   rad:
     runs-on: ubuntu-latest
     steps:
@@ -50,7 +51,7 @@ jobs:
         with:
           context: images/rad
           push: true
-          tags: taropowder/pokeball_rad:latest
+          tags: pokemonscan/pokeball_rad:latest
   oneforall:
     runs-on: ubuntu-latest
     steps:
@@ -73,7 +74,7 @@ jobs:
         with:
           context: images/oneforall
           push: true
-          tags: taropowder/pokeball_oneforall:latest
+          tags: pokemonscan/pokeball_oneforall:latest
   nuclei:
     runs-on: ubuntu-latest
     steps:
@@ -96,7 +97,7 @@ jobs:
         with:
           context: images/nuclei
           push: true
-          tags: taropowder/pokeball_nuclei:latest
+          tags: pokemonscan/pokeball_nuclei:latest
   enscan:
     runs-on: ubuntu-latest
     steps:
@@ -119,4 +120,4 @@ jobs:
         with:
           context: images/enscan
           push: true
-          tags: taropowder/pokeball_enscan:latest
+          tags: pokemonscan/pokeball_enscan:latest

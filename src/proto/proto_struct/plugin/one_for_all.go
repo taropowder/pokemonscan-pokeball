@@ -2,7 +2,7 @@ package plugin
 
 const (
 	OneForAllPluginName = "OneForAll"
-	OneForAllImageName  = "taropowder/pokeball_oneforall"
+	OneForAllImageName  = "pokemonscan/pokeball_oneforall"
 )
 
 type OneForAllConfig struct {

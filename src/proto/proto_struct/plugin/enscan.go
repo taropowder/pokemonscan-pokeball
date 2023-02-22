@@ -2,7 +2,7 @@ package plugin
 
 const (
 	ENScanPluginName = "ENScan"
-	ENScanImageName  = "taropowder/pokeball_enscan"
+	ENScanImageName  = "pokemonscan/pokeball_enscan"
 )
 
 type ENScanConfig struct {

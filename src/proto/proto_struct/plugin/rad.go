@@ -2,7 +2,7 @@ package plugin
 
 const (
 	RadPluginName        = "Rad"
-	RadImageName         = "taropowder/pokeball_rad"
+	RadImageName         = "pokemonscan/pokeball_rad"
 	RadDefaultConfigFile = `exec_path: ""                     # 启动chrome的路径
 disable_headless: false           # 禁用无头模式
 force_sandbox: false              # 强制开启sandbox；为 false 时默认开启沙箱，但在容器中会关闭沙箱。为true时强制启用沙箱，可能导致在docker中无法使用。

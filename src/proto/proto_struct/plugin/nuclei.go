@@ -2,7 +2,7 @@ package plugin
 
 const (
 	NucleiPluginName = "Nuclei"
-	NucleiImageName  = "taropowder/pokeball_nuclei"
+	NucleiImageName  = "pokemonscan/pokeball_nuclei"
 )
 
 type NucleiConfig struct {

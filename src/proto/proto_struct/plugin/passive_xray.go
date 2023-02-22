@@ -2,7 +2,7 @@ package plugin
 
 const (
 	PassiveXrayPluginName = "PassiveXray"
-	PassiveXrayImageName  = "taropowder/pokeball_xray"
+	PassiveXrayImageName  = "pokemonscan/pokeball_xray"
 )
 
 type PassiveXrayConfig struct {
