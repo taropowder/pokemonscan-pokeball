@@ -18,4 +18,6 @@ openssl x509 -req -sha256 -days 3650 -in ${CONFIG_KEY_DIR}/client.csr -out ${CON
 
 docker-compose up -d
 
+sleep 30
+
 docker exec pokemon_daycare /app/daycare --config config/daycare_config.yml init

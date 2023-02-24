@@ -116,13 +116,6 @@ func main() {
 			},
 		},
 		{
-			Name: "ding",
-			Action: func(c *cli.Context) error {
-
-				return nil
-			},
-		},
-		{
 			Name: "version",
 			Action: func(c *cli.Context) error {
 				fmt.Printf("Commit: %s\ngoVersion: %s, compiler: %s, Platform: %s\n",
