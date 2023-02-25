@@ -124,11 +124,6 @@ You are welcome to contribute code to PokemonScan
 
 If you have any ideas, suggestions or bugs, please submit an issue to me.
 
-Or you can join wechat group chat
-
-![wechat_group](doc/img/wechat-qun.png)
-
 Follow my WeChat public account to get the latest version update
-
 
 ![wechat_group](doc/img/gz.jpg)
