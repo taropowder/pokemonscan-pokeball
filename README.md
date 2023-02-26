@@ -124,6 +124,7 @@ You are welcome to contribute code to PokemonScan
 
 If you have any ideas, suggestions or bugs, please submit an issue to me.
 
-Follow my WeChat public account to get the latest version update
+或者有什么建议和想法您也可以直接从通过公众号发给我😂  
+原谅社恐人不想拉群 
 
 ![wechat_group](doc/img/gz.jpg)
