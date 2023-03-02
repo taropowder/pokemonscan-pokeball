@@ -4,3 +4,6 @@
 [submodule "images/oneforall"]
 	path = images/oneforall
 	url = https://github.com/shmilylty/OneForAll.git
+[submodule "images/masscan/src"]
+	path = images/masscan/src
+	url = https://github.com/robertdavidgraham/masscan.git

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
-	gonmap "github.com/lair-framework/go-nmap"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"os"
@@ -17,21 +16,29 @@ import (
 	"strings"
 )
 
-type NmapPlugin struct {
+type MasscanPlugin struct {
 	Name string
 }
 
-func (p *NmapPlugin) Register(conn grpc.ClientConnInterface, pluginConfig string) error {
-	p.Name = "Nmap"
+type MasscanResult struct {
+	Ip        string `json:"ip"`
+	Timestamp string `json:"timestamp"`
+	Ports     []struct {
+		Port   int    `json:"port"`
+		Proto  string `json:"proto"`
+		Status string `json:"status"`
+		Reason string `json:"reason"`
+		Ttl    int    `json:"ttl"`
+	} `json:"ports"`
+}
+
+func (p *MasscanPlugin) Register(conn grpc.ClientConnInterface, pluginConfig string) error {
+	p.Name = "Masscan"
 	return nil
 }
 
-// FROM  https://github.com/CTF-MissFeng/NmapTools/blob/master/nmap.go
-
-// END
-
-func (p *NmapPlugin) Run(taskId int32, pluginConfig string) error {
-	config := plugin_proto.NmapConfig{}
+func (p *MasscanPlugin) Run(taskId int32, pluginConfig string) error {
+	config := plugin_proto.MasscanConfig{}
 	if err := json.Unmarshal([]byte(pluginConfig), &config); err != nil {
 		return err
 	}
@@ -43,14 +50,15 @@ func (p *NmapPlugin) Run(taskId int32, pluginConfig string) error {
 	cmdSlice = append(cmdSlice, []string{
 		"-p", config.Ports,
 		config.Target,
-		"-oX", fmt.Sprintf("/app/res/%d_res.xml", taskId),
+		"--output-format", "json",
+		"--output-filename", fmt.Sprintf("/app/res/%d_res.json", taskId),
 	}...)
 	if config.CommandArgs != "" {
 		cmdSlice = append(cmdSlice, strings.Split(config.CommandArgs, " ")...)
 	}
 
 	containerConfig := &container.Config{
-		Image:    plugin_proto.NmapImageName,
+		Image:    plugin_proto.MasscanImageName,
 		Cmd:      cmdSlice,
 		Hostname: containerName,
 	}
@@ -73,45 +81,43 @@ func (p *NmapPlugin) Run(taskId int32, pluginConfig string) error {
 	return nil
 }
 
-func (p *NmapPlugin) GetName() string {
+func (p *MasscanPlugin) GetName() string {
 	return p.Name
 }
 
-func (p *NmapPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeball.ReportVulArgs, error) {
-
+func (p *MasscanPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeball.ReportVulArgs, error) {
 	resArgs := &pokeball.ReportVulArgs{}
 	resultDir := utils.GetPluginTmpDir(p.Name, "result")
 
-	nmapResFile := path.Join(resultDir, fmt.Sprintf("%d_res.xml", taskId))
+	nmapResFile := path.Join(resultDir, fmt.Sprintf("%d_res.json", taskId))
 
 	b, err := os.ReadFile(nmapResFile)
 	if err != nil {
 		log.Error("err", err)
 	}
 	defer os.Remove(nmapResFile)
-	nmapRes, err := gonmap.Parse(b)
+
+	masscanResults := make([]MasscanResult, 0)
+	err = json.Unmarshal(b, &masscanResults)
+	if err != nil {
+		log.Error(err)
+	}
 	hosts := make([]*pokeball.HostInfo, 0)
 
-	for _, nmapHost := range nmapRes.Hosts {
+	for _, masscanResult := range masscanResults {
 		resHost := &pokeball.HostInfo{}
+		resHost.Host = masscanResult.Ip
 		resHost.HostService = make([]*pokeball.HostService, 0)
-		for _, address := range nmapHost.Addresses {
-			if address.AddrType == "ipv4" {
-				resHost.Host = address.Addr
-				break
-			}
-		}
-		for _, nmapPort := range nmapHost.Ports {
-			if nmapPort.State.State == "open" {
-				resHost.HostService = append(resHost.HostService, &pokeball.HostService{
-					Port: int32(nmapPort.PortId),
-					Name: nmapPort.Service.Name,
-				})
-			}
+		for _, port := range masscanResult.Ports {
+			resHost.HostService = append(resHost.HostService, &pokeball.HostService{
+				Port: int32(port.Port),
+				Name: port.Proto,
+			})
 		}
 		hosts = append(hosts, resHost)
 
 	}
+
 	result := &pokeball.ReportInfoArgs{}
 
 	result.Hosts = hosts
@@ -119,10 +125,10 @@ func (p *NmapPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokebal
 	return result, resArgs, nil
 }
 
-func (p *NmapPlugin) GetListenAddress(fromContainer bool) string {
+func (p *MasscanPlugin) GetListenAddress(fromContainer bool) string {
 	return ""
 }
 
-func (p *NmapPlugin) UpdateConfig(pluginConfig string) error {
+func (p *MasscanPlugin) UpdateConfig(pluginConfig string) error {
 	return nil
 }
