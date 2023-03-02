@@ -89,10 +89,10 @@ func (p *NmapPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokebal
 	defer os.Remove(nmapResFile)
 	nmapRes, err := gonmap.Parse(b)
 	hosts := make([]*pokeball.HostInfo, 0)
-	hs := make([]*pokeball.HostService, 0)
 
 	for _, nmapHost := range nmapRes.Hosts {
 		resHost := &pokeball.HostInfo{}
+		resHost.HostService = make([]*pokeball.HostService, 0)
 		for _, address := range nmapHost.Addresses {
 			if address.AddrType == "ipv4" {
 				resHost.Host = address.Addr
@@ -100,11 +100,12 @@ func (p *NmapPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokebal
 			}
 		}
 		for _, nmapPort := range nmapHost.Ports {
-			hs = append(hs, &pokeball.HostService{
+			resHost.HostService = append(resHost.HostService, &pokeball.HostService{
 				Port: int32(nmapPort.PortId),
 				Name: nmapPort.Service.Name,
 			})
 		}
+		hosts = append(hosts, resHost)
 
 	}
 	result := &pokeball.ReportInfoArgs{}
