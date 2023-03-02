@@ -1,3 +1,3 @@
 FROM instrumentisto/nmap
 
-RUN mkdir /app/res
+RUN mkdir -p /app/res
