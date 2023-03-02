@@ -73,6 +73,7 @@ func NewPokeballPluginManager(conn grpc.ClientConnInterface) *PluginManager {
 		plugin_proto.NucleiPluginName:      &plugins.NucleiPlugin{Name: plugin_proto.NucleiPluginName},
 		plugin_proto.RadPluginName:         &plugins.RadPlugin{Name: plugin_proto.RadPluginName},
 		plugin_proto.RecorderPluginName:    &plugins.RecorderPlugin{Name: plugin_proto.RecorderPluginName},
+		plugin_proto.NmapPluginName:        &plugins.RecorderPlugin{Name: plugin_proto.NmapPluginName},
 		plugin_proto.ENScanPluginName:      &plugins.ENScanPlugin{Name: plugin_proto.ENScanPluginName, WorkingTasks: &sync.Map{}},
 	}
 
