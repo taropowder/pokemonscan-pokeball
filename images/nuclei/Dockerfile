@@ -22,6 +22,16 @@ RUN  /app/nuclei -update
 
 RUN  /app/nuclei -ut
 
+#delete some useless plugins 
+
+# disable ssl
+RUN rm -rf /root/nuclei-templates/ssl
+# disable harmless http detection
+RUN rm -f /root/nuclei-templates/misconfiguration/http-missing-security-headers.yaml
+RUN rm -f /root/nuclei-templates/misconfiguration/httponly-cookie-detect.yaml
+
+
+
 RUN  /app/nuclei -headless
 
 ENTRYPOINT ["/app/nuclei"]
