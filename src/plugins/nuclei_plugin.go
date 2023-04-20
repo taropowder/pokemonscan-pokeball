@@ -46,7 +46,7 @@ func (p *NucleiPlugin) Run(taskId int32, pluginConfig string) error {
 	resultDir := utils.GetPluginTmpDir(p.Name, NucleiResDir)
 
 	defaultArgs := []string{
-		"-headless",
+		//"-headless",
 		"-duc",
 		"-jle", fmt.Sprintf("/app/res/nuclei-%d", taskId),
 	}

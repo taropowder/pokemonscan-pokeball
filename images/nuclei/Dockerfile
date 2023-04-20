@@ -18,9 +18,12 @@ RUN mkdir /app/res
 
 RUN unzip nuclei_${version}_linux_amd64.zip
 
-#RUN  /app/nuclei -update
+RUN  /app/nuclei -update
 
-RUN  /app/nuclei
+RUN  /app/nuclei -ut
+
+
+RUN  /app/nuclei -headless
 
 #delete some useless plugins 
 
