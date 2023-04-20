@@ -23,7 +23,7 @@ RUN  /app/nuclei -update
 RUN  /app/nuclei -ut
 
 
-RUN  export QTWEBENGINE_DISABLE_SANDBOX=1 /app/nuclei -headless
+RUN  export QTWEBENGINE_DISABLE_SANDBOX=1 && /app/nuclei -headless
 
 #delete some useless plugins 
 
