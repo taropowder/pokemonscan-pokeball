@@ -26,5 +26,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: worker_pokeball
-          path: pokeball/build/pokeball.tar.gz
+          path: build/pokeball.tar.gz
           retention-days: 1
