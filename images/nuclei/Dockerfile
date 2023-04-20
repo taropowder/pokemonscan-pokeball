@@ -18,10 +18,11 @@ RUN mkdir /app/res
 
 RUN unzip nuclei_${version}_linux_amd64.zip
 
+RUN sed  -i  's/"$@"/"$@" --user-data-dir --no-sandbox/g' /usr/bin/google-chrome
+
 RUN  /app/nuclei -update
 
 RUN  /app/nuclei -ut
-
 
 RUN  export QTWEBENGINE_DISABLE_SANDBOX=1 && /app/nuclei -headless
 
