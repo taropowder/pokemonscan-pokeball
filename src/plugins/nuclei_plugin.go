@@ -45,16 +45,25 @@ func (p *NucleiPlugin) Run(taskId int32, pluginConfig string) error {
 
 	resultDir := utils.GetPluginTmpDir(p.Name, NucleiResDir)
 
+	defaultArgs := []string{
+		"-headless",
+		"-duc",
+		"-jle", fmt.Sprintf("/app/res/nuclei-%d", taskId),
+	}
+
+	if !strings.Contains(config.CommandArgs, "-severity") {
+		defaultArgs = append(defaultArgs, "-severity")
+		defaultArgs = append(defaultArgs, "low,medium,high,critical")
+	}
+
+	cmdSlice := make([]string, 0)
+	cmdSlice = append(cmdSlice, strings.Split(config.CommandArgs, " ")...)
+
+	cmdSlice = append(cmdSlice, defaultArgs...)
+
 	containerConfig := &container.Config{
-		Image: plugin_proto.NucleiImageName,
-		Cmd: []string{"-severity", "low,medium,high,critical",
-			"-json",
-			"-headless",
-			//"-project",
-			//"-project-path", "/app/project",
-			"-duc",
-			"-o", fmt.Sprintf("/app/res/nuclei-%d", taskId),
-			"-u", config.Target},
+		Image:    plugin_proto.NucleiImageName,
+		Cmd:      cmdSlice,
 		Hostname: containerName,
 	}
 

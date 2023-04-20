@@ -6,5 +6,5 @@ const (
 )
 
 type NucleiConfig struct {
-	Target string `json:"target"`
+	CommandArgs string `json:"command_args"`
 }
