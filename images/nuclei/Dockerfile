@@ -3,11 +3,11 @@ FROM ubuntu:18.04
 ARG version=2.9.2
 WORKDIR /app
 
-#ADD https://github.com/projectdiscovery/nuclei/releases/download/v${version}/nuclei_${version}_linux_amd64.zip /app
-#ADD https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb /app
+ADD https://github.com/projectdiscovery/nuclei/releases/download/v${version}/nuclei_${version}_linux_amd64.zip /app
+ADD https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb /app
 
-ADD nuclei_${version}_linux_amd64.zip /app
-ADD google-chrome-stable_current_amd64.deb /app
+#ADD nuclei_${version}_linux_amd64.zip /app
+#ADD google-chrome-stable_current_amd64.deb /app
 
 RUN apt-get update
 
