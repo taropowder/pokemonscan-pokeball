@@ -18,11 +18,9 @@ RUN mkdir /app/res
 
 RUN unzip nuclei_${version}_linux_amd64.zip
 
-RUN /app/nuclei -u taropowder.cn -as
-
 #RUN  /app/nuclei -update
 
-#RUN  /app/nuclei -ut
+RUN  /app/nuclei
 
 #delete some useless plugins 
 
