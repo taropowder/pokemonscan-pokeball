@@ -41,8 +41,8 @@ func (p *NmapPlugin) Run(taskId int32, pluginConfig string) error {
 
 	cmdSlice := make([]string, 0)
 	cmdSlice = append(cmdSlice, []string{
-		"-p", config.Ports,
-		config.Target,
+		//"-p", config.Ports,
+		//config.Target,
 		"-oX", fmt.Sprintf("/app/res/%d_res.xml", taskId),
 	}...)
 	if config.CommandArgs != "" {

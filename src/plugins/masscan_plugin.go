@@ -48,8 +48,8 @@ func (p *MasscanPlugin) Run(taskId int32, pluginConfig string) error {
 
 	cmdSlice := make([]string, 0)
 	cmdSlice = append(cmdSlice, []string{
-		"-p", config.Ports,
-		config.Target,
+		//"-p", config.Ports,
+		//config.Target,
 		"--output-format", "json",
 		"--output-filename", fmt.Sprintf("/app/res/%d_res.json", taskId),
 	}...)

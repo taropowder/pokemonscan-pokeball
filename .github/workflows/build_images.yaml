@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - plugin_*
-      - master
-      - main
 
 jobs:
   xray:

@@ -5,17 +5,17 @@ import (
 	"testing"
 )
 
-func TestNuclei(t *testing.T) {
-	p := NucleiPlugin{}
+func TestMasscan(t *testing.T) {
+	p := MasscanPlugin{}
 	err := p.Register(nil, ``)
 	if err != nil {
 		t.Error(err)
 	}
-	err = p.Run(0, `{"command_args":"-t baidu.cn -headless -severity critical"}`)
+	err = p.Run(0, `{"command_args":"-p 80-100 1.1.1.1"}`)
 	if err != nil {
 		t.Error(err)
 	}
-	_, vuls, err := p.GetResult(0)
+	info, vuls, err := p.GetResult(0)
 	if err != nil {
 		t.Error(err)
 	}
@@ -23,5 +23,6 @@ func TestNuclei(t *testing.T) {
 		t.Error()
 	}
 	fmt.Println(vuls)
+	fmt.Println(info)
 
 }

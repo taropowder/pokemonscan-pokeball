@@ -268,7 +268,7 @@ func (p *PassiveXrayPlugin) UpdateConfig(pluginConfig string) error {
 		Mounts: mounts,
 	}
 
-	// docker run --rm -p 127.0.0.1:7777:7777  --network pokemon_net pokemon:plugin_xray webscan --listen 0.0.0.0:7777
+	// docker run --rm   --network pokemon_net pokemonscan/pokeball_xray webscan --listen 0.0.0.0:7777
 	err = docker.Run(containerConfig, hostConfig, nil, containerName)
 	if err != nil {
 		return err

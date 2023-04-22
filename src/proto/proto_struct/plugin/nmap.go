@@ -6,7 +6,7 @@ const (
 )
 
 type NmapConfig struct {
-	Ports       string `json:"ports"`
-	Target      string `json:"target"`
+	//Ports       string `json:"ports"`
+	//Target      string `json:"target"`
 	CommandArgs string `json:"command_args"`
 }
