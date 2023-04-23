@@ -12,9 +12,7 @@ proxy: ""                         # 代理配置
 user_agent: ""                    # 请求user-agent配置
 domain_headers:                   # 请求头配置:[]{domain,map[headerKey]HeaderValue}
   - domain: '*'                   # 为哪些域名设置header，glob语法
-    headers: {                    # 请求头，map[key]value
-      Cookie: %s
-    }                    
+    headers: %s                    
 max_depth: 10                     # 最大页面深度限制
 navigate_timeout_second: 10       # 访问超时时间，单位秒
 load_timeout_second: 10           # 加载超时时间，单位秒
@@ -27,7 +25,7 @@ max_page_visit: 1000              # 总共允许访问的页面数量
 max_page_visit_per_site: 1000     # 每个站点最多访问的页面数量
 element_filter_strength: 0        # 过滤同站点相似元素强度，1-7取值，强度逐步增大，为0时不进行跨页面元素过滤
 new_task_filter_config: # 检查某个链接是否应该被加入爬取队列
-  hostname_allowed: [ ]            # 允许访问的 Hostname，支持格式如 t.com、*.t.com、1.1.1.1、1.1.1.1/24、1.1-4.1.1-8
+  %s
   hostname_disallowed: [ ]         # 不允许访问的 Hostname，支持格式如 t.com、*.t.com、1.1.1.1、1.1.1.1/24、1.1-4.1.1-8
   port_allowed: [ ]                # 允许访问的端口, 支持的格式如: 80、80-85
   port_disallowed: [ ]             # 不允许访问的端口, 支持的格式如: 80、80-85
@@ -69,6 +67,7 @@ request_output_filter_config: # 检查某个请求是否应该被输出
 
 type RadConfig struct {
 	Target           string `json:"target"`
+	AllowDomains     string `json:"allow_domains"`
 	DownstreamPlugin string `json:"downstream_plugin"`
 	RadConfigFile    string `json:"rad_config_file"`
 	Cookie           string `json:"cookie"`

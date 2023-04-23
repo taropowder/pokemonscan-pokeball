@@ -15,6 +15,7 @@ import (
 	plugin_proto "pokemonscan-pokeball/src/proto/proto_struct/plugin"
 	"pokemonscan-pokeball/src/utils"
 	"pokemonscan-pokeball/src/utils/docker"
+	"strings"
 )
 
 // docker run --rm --network pokemon_net -v /tmp/tmp_data/:/data pokemon:plugin_rad --http-proxy 192.161.0.2:7777  -t http://192.168.134.12:8161
@@ -52,6 +53,9 @@ func (p *RadPlugin) Run(taskId int32, pluginConfig string) error {
 
 	// docker run --add-host=host.docker.internal:host-gateway pokemon:plugin_rad --http-proxy host.docker.internal:8980 -t https://taropowder.cn
 
+	defaultAllowDomainConfig := "hostname_allowed: [ ]"
+	defaultHeader := "{}"
+
 	downstreamProxyUrl := ""
 
 	if config.DownstreamPlugin != "" {
@@ -73,13 +77,33 @@ func (p *RadPlugin) Run(taskId int32, pluginConfig string) error {
 			radConfigFile = ""
 		}
 	} else {
+		//setCookie := ""
+		//if config.Cookie != "" {
+		//	setCookie = config.Cookie
+		//}
+
+		if config.AllowDomains != "" {
+			radAllowDomain := "hostname_allowed:\n"
+			for _, domain := range strings.Split(config.AllowDomains, ",") {
+				radAllowDomain = radAllowDomain + fmt.Sprintf("  - '*.%s'\n", domain)
+			}
+			defaultAllowDomainConfig = radAllowDomain
+		}
+
 		if config.Cookie != "" {
+			defaultHeader = fmt.Sprintf("{                    \n      Cookie: %s\n    }", config.Cookie)
+		}
+
+		if config.Cookie != "" || config.AllowDomains != "" {
 			radConfigFile = path.Join(configDir, fmt.Sprintf(radConfigFileFormat, taskId))
-			err := ioutil.WriteFile(radConfigFile, []byte(fmt.Sprintf(plugin_proto.RadDefaultConfigFile, config.Cookie)), 644)
+			fileContent := fmt.Sprintf(plugin_proto.RadDefaultConfigFile, defaultHeader, defaultAllowDomainConfig)
+			err := ioutil.WriteFile(radConfigFile, []byte(fileContent), 0644)
 			if err != nil {
 				radConfigFile = ""
+				log.Error(err)
 			}
 		}
+
 	}
 
 	if radConfigFile != "" {
