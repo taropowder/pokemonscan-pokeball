@@ -8,6 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"io/ioutil"
+	"net"
 	"os"
 	"path"
 	"pokemonscan-pokeball/src/conf"
@@ -15,6 +16,7 @@ import (
 	plugin_proto "pokemonscan-pokeball/src/proto/proto_struct/plugin"
 	"pokemonscan-pokeball/src/utils"
 	"pokemonscan-pokeball/src/utils/docker"
+	"regexp"
 	"strings"
 )
 
@@ -81,11 +83,20 @@ func (p *RadPlugin) Run(taskId int32, pluginConfig string) error {
 		//if config.Cookie != "" {
 		//	setCookie = config.Cookie
 		//}
+		cidrRegex := regexp.MustCompile(`^(\d{1,3}\.){3}\d{1,3}/(0|[1-9]|[12]\d|3[0-2])$`)
 
 		if config.AllowDomains != "" {
 			radAllowDomain := "hostname_allowed:\n"
 			for _, domain := range strings.Split(config.AllowDomains, ",") {
-				radAllowDomain = radAllowDomain + fmt.Sprintf("  - '*.%s'\n", domain)
+				if net.ParseIP(domain) != nil || cidrRegex.MatchString(domain) {
+					radAllowDomain = radAllowDomain + fmt.Sprintf("  - %s\n", domain)
+				} else {
+					if strings.HasPrefix(domain, "*") {
+						radAllowDomain = radAllowDomain + fmt.Sprintf("  - %s\n", domain)
+					} else {
+						radAllowDomain = radAllowDomain + fmt.Sprintf("  - '*.%s'\n", domain)
+					}
+				}
 			}
 			defaultAllowDomainConfig = radAllowDomain
 		}
