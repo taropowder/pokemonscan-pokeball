@@ -89,3 +89,8 @@ func TestDockerRm(t *testing.T) {
 	RmWithContainerName("pokemon-xray")
 
 }
+
+func TestDockerExist(t *testing.T) {
+	fmt.Println(ContainerExist("52b54fff44be"))
+
+}

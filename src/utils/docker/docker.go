@@ -164,3 +164,16 @@ func RmWithContainerName(containerName string) error {
 
 	return err
 }
+
+func ContainerExist(containerName string) bool {
+	ctx := context.Background()
+
+	i, err := dockerClient.ContainerInspect(ctx, containerName)
+
+	log.Info(i)
+
+	if err != nil {
+		return false
+	}
+	return true
+}

@@ -268,11 +268,21 @@ func (p *PassiveXrayPlugin) UpdateConfig(pluginConfig string) error {
 		Mounts: mounts,
 	}
 
-	// docker run --rm   --network pokemon_net pokemonscan/pokeball_xray webscan --listen 0.0.0.0:7777
-	err = docker.Run(containerConfig, hostConfig, nil, containerName)
-	if err != nil {
-		return err
-	}
+	for {
+		err = docker.Run(containerConfig, hostConfig, nil, containerName)
+		if err != nil {
+			log.Errorf("Plugin Xray Running error: %v", err)
+			return err
+		}
 
-	return nil
+		time.Sleep(30 * time.Second)
+
+		if docker.ContainerExist(containerName) {
+			return nil
+		}
+
+	}
+	// docker run --rm   --network pokemon_net pokemonscan/pokeball_xray webscan --listen 0.0.0.0:7777
+
+	//return nil
 }
