@@ -91,7 +91,7 @@ func (p *NmapPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokebal
 	defer os.Remove(nmapResFile)
 	nmapRes, err := gonmap.Parse(b)
 	hosts := make([]*pokeball.HostInfo, 0)
-	website := make([]*pokeball.WebsiteInfo, 0)
+	websites := make([]*pokeball.WebsiteInfo, 0)
 
 	for _, nmapHost := range nmapRes.Hosts {
 		resHost := &pokeball.HostInfo{}
@@ -109,7 +109,7 @@ func (p *NmapPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokebal
 					Name: nmapPort.Service.Name,
 				})
 				if strings.Contains(nmapPort.Service.Name, "http") {
-					website = append(website, &pokeball.WebsiteInfo{
+					websites = append(websites, &pokeball.WebsiteInfo{
 						Url:    fmt.Sprintf("%s://%s:%d/", nmapPort.Service.Name, resHost.Host, nmapPort.PortId),
 						Plugin: "Nmap",
 					})
@@ -122,6 +122,7 @@ func (p *NmapPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokebal
 	result := &pokeball.ReportInfoArgs{}
 
 	result.Hosts = hosts
+	result.Websites = websites
 
 	return result, resArgs, nil
 }
