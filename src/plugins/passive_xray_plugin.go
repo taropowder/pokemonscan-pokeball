@@ -255,7 +255,7 @@ func (p *PassiveXrayPlugin) UpdateConfig(pluginConfig string) error {
 	}
 
 	hostConfig := &container.HostConfig{
-		AutoRemove: true,
+		//AutoRemove: true,
 		ExtraHosts: []string{"host.docker.internal:host-gateway"},
 		PortBindings: nat.PortMap{
 			nat.Port(fmt.Sprintf("%d/tcp", config.ListenPort)): []nat.PortBinding{
@@ -285,4 +285,7 @@ func (p *PassiveXrayPlugin) UpdateConfig(pluginConfig string) error {
 	// docker run --rm   --network pokemon_net pokemonscan/pokeball_xray webscan --listen 0.0.0.0:7777
 
 	//return nil
+
+	//	写一个函数判断奇偶值
+
 }

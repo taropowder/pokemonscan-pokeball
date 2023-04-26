@@ -170,10 +170,12 @@ func ContainerExist(containerName string) bool {
 
 	i, err := dockerClient.ContainerInspect(ctx, containerName)
 
-	log.Info(i)
+	// 判断容器是否运行， 如果是 running 状态的容器则返回 true
+	log.Info(i.State.Status)
 
-	if err != nil {
-		return false
+	if err == nil && i.State.Status == "running" {
+		return true
 	}
-	return true
+
+	return false
 }
