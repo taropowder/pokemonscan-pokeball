@@ -21,8 +21,8 @@ var dockerClient *client.Client
 
 func init() {
 	var err error
-	//dockerClient, err = client.NewClientWithOpts(client.FromEnv)
-	dockerClient, err = client.NewClientWithOpts(client.WithVersion("1.41"))
+	dockerClient, err = client.NewClientWithOpts(client.FromEnv)
+	//dockerClient, err = client.NewClientWithOpts(client.WithVersion("1.41"))
 	if err != nil {
 		log.Fatalf("init docker error %s", err)
 	} else {
