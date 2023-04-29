@@ -16,4 +16,8 @@ RUN chmod +x /app/xray
 
 RUN /app/xray
 
-ENTRYPOINT ["/app/xray"]
+ADD run.sh /app
+
+RUN  chmod +x /app/run.sh
+
+ENTRYPOINT ["/app/run.sh"]
