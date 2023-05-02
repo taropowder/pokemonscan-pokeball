@@ -109,10 +109,20 @@ func (p *NmapPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokebal
 					Name: nmapPort.Service.Name,
 				})
 				if strings.Contains(nmapPort.Service.Name, "http") {
-					websites = append(websites, &pokeball.WebsiteInfo{
-						Url:    fmt.Sprintf("%s://%s:%d/", nmapPort.Service.Name, resHost.Host, nmapPort.PortId),
-						Plugin: "Nmap",
-					})
+					if strings.Contains(nmapPort.Service.Name, "https") {
+						websites = append(websites, &pokeball.WebsiteInfo{
+							Url:    fmt.Sprintf("%s://%s:%d/", "https", resHost.Host, nmapPort.PortId),
+							Plugin: "Nmap",
+						})
+						continue
+
+					} else {
+						websites = append(websites, &pokeball.WebsiteInfo{
+							Url:    fmt.Sprintf("%s://%s:%d/", "http", resHost.Host, nmapPort.PortId),
+							Plugin: "Nmap",
+						})
+						continue
+					}
 				}
 			}
 		}
