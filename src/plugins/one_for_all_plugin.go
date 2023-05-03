@@ -68,7 +68,7 @@ func (p *OneForAllPlugins) Run(taskId int32, pluginConfig string) error {
 	}
 	p.WorkingTasks.Store(taskId, config)
 	configDir := utils.GetPluginTmpDir(p.Name, OneForALlConfigDir)
-	resultDir := utils.GetPluginTmpDir(p.Name, OneForALlResDir)
+	resultDir := path.Join(utils.GetPluginTmpDir(p.Name, OneForALlResDir), fmt.Sprintf("%d", taskId))
 
 	mounts := make([]mount.Mount, 0)
 	mounts = append(mounts, mount.Mount{
@@ -137,14 +137,16 @@ func (p *OneForAllPlugins) GetResult(taskId int32) (result *pokeball.ReportInfoA
 
 	vul = nil
 
-	resultDir := utils.GetPluginTmpDir(p.Name, OneForALlResDir)
+	resultDir := path.Join(utils.GetPluginTmpDir(p.Name, OneForALlResDir), fmt.Sprintf("%d", taskId))
+
 	resFile := path.Join(resultDir, fmt.Sprintf(OneForAllResFile, taskId))
 	f, err := ioutil.ReadFile(resFile)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	defer os.Remove(resFile)
+	// 删除 resultDir 文件夹
+	defer os.RemoveAll(resultDir)
 
 	oneforallResults := make([]OneForAllResult, 0)
 	err = json.Unmarshal(f, &oneforallResults)
