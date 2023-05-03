@@ -18,6 +18,7 @@ pokeball_oneforall
 pokeball_rad
 pokeball_xray
 pokeball_nmap
+pokeball_chaos
 )
 
 

@@ -7,3 +7,6 @@
 [submodule "images/masscan/src"]
 	path = images/masscan/src
 	url = https://github.com/robertdavidgraham/masscan.git
+[submodule "images/chaos"]
+	path = images/chaos
+	url = https://github.com/projectdiscovery/chaos-client.git
