@@ -108,6 +108,10 @@ func (p *ChaosPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeba
 
 	var res ChaosResult
 
+	if len(fileBytes) == 0 {
+		return nil, nil, nil
+	}
+
 	err = json.Unmarshal(fileBytes, &res)
 	if err != nil {
 		log.Error(err)
