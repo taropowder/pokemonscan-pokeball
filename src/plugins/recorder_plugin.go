@@ -72,7 +72,7 @@ func (plugin *RecorderPlugin) Register(conn grpc.ClientConnInterface, pluginConf
 	//defer p.Close()
 
 	// 代理监听端口
-	l, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%d", config.ListenPort))
+	l, err := net.Listen("tcp", fmt.Sprintf("127.0.0.1:%d", config.ListenPort))
 	if err != nil {
 		log.Fatal(err)
 	}
