@@ -77,6 +77,7 @@ func NewPokeballPluginManager(conn grpc.ClientConnInterface) *PluginManager {
 		plugin_proto.MasscanPluginName:     &plugins.MasscanPlugin{Name: plugin_proto.MasscanPluginName},
 		plugin_proto.ENScanPluginName:      &plugins.ENScanPlugin{Name: plugin_proto.ENScanPluginName, WorkingTasks: &sync.Map{}},
 		plugin_proto.ChaosPluginName:       &plugins.ChaosPlugin{Name: plugin_proto.ChaosPluginName, WorkingTasks: &sync.Map{}},
+		plugin_proto.XrayPluginName:        &plugins.XrayPlugin{Name: plugin_proto.XrayPluginName, WorkingTasks: &sync.Map{}},
 	}
 
 	//fmt.Printf("registerConfig.PluginsConfig %v\n", registerConfig.PluginsConfig)
