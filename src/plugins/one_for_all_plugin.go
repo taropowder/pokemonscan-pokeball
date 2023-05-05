@@ -70,6 +70,8 @@ func (p *OneForAllPlugins) Run(taskId int32, pluginConfig string) error {
 	configDir := utils.GetPluginTmpDir(p.Name, OneForALlConfigDir)
 	resultDir := path.Join(utils.GetPluginTmpDir(p.Name, OneForALlResDir), fmt.Sprintf("%d", taskId))
 
+	os.MkdirAll(resultDir, os.ModePerm)
+
 	mounts := make([]mount.Mount, 0)
 	mounts = append(mounts, mount.Mount{
 		Type:   mount.TypeBind,
