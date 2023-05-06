@@ -107,7 +107,7 @@ func (p *PassiveXrayPlugin) GetResult(taskId int32) (result *pokeball.ReportInfo
 func (p *PassiveXrayPlugin) runServer() {
 	http.HandleFunc("/", p.webHook)
 	log.Infof("start xray webhook server %v", p.webHookPort)
-	err := http.ListenAndServe(fmt.Sprintf("127.0.0.1:%d", p.webHookPort), nil)
+	err := http.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", p.webHookPort), nil)
 	if err != nil {
 		log.Errorf("error in run xray webhook server %v", err)
 	}
