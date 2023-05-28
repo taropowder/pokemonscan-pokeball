@@ -94,6 +94,7 @@ message HostInfo {
   string host = 1;
   repeated HostService hostService = 2;
   string plugin = 3;
+  bool invalid = 4;
 
 }
 
