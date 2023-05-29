@@ -191,14 +191,14 @@ func (p *FofaPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokebal
 					wg.Add(1)
 					go func() {
 						defer wg.Done()
-						respHash, statusCode, respLength, err := utils.GetUrlInfo(url)
+						respHash, statusCode, title, respLength, err := utils.GetUrlInfo(url)
 						if err != nil {
 							log.Errorf("error for get resp for %s : %v", url, err)
 							return
 						}
 						website := &pokeball.WebsiteInfo{
 							Url:        url,
-							Title:      result[9],
+							Title:      title,
 							Length:     int32(respLength),
 							StatusCode: int32(statusCode),
 							Server:     result[8],

@@ -137,12 +137,13 @@ func (p *ChaosPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeba
 
 			go func() {
 				defer wg.Done()
-				respHash, statusCode, respLength, err := utils.GetUrlInfo(url)
+				respHash, statusCode, title, respLength, err := utils.GetUrlInfo(url)
 				if err != nil {
 					log.Errorf("error for get resp for %s : %v", url, err)
 				} else {
 					websites = append(websites, &pokeball.WebsiteInfo{
 						Url:        url,
+						Title:      title,
 						StatusCode: int32(statusCode),
 						RespHash:   respHash,
 						Length:     int32(respLength),

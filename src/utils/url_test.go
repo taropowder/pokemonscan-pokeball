@@ -6,9 +6,15 @@ import (
 )
 
 func TestGetUrlInfo(t *testing.T) {
-	hash, code, length, err := GetUrlInfo("http://pokemon.taropowder.cn/123123123")
+	hash, code, title, length, err := GetUrlInfo("https://zhoushan.dujia.qunar.com")
 	if err == nil {
-		log.Info(hash, code, length)
+		log.Info(hash, title, code, length)
+	} else {
+		log.Warn(err)
+	}
+	hash, code, title, length, err = GetUrlInfo("https://zhejiang.dujia.qunar.com")
+	if err == nil {
+		log.Info(hash, title, code, length)
 	} else {
 		log.Warn(err)
 	}

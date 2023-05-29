@@ -178,14 +178,14 @@ func (p *OneForAllPlugins) GetResult(taskId int32) (result *pokeball.ReportInfoA
 			wg.Add(1)
 			go func() {
 				defer wg.Done()
-				respHash, statusCode, respLength, err := utils.GetUrlInfo(r.Url)
+				respHash, statusCode, title, respLength, err := utils.GetUrlInfo(r.Url)
 				if err != nil {
 					log.Errorf("error for get resp for %s : %v", r.Url, err)
 					return
 				}
 				website := &pokeball.WebsiteInfo{
 					Url:        r.Url,
-					Title:      r.Title,
+					Title:      title,
 					StatusCode: int32(statusCode),
 					Length:     int32(respLength),
 					Server:     r.Banner,

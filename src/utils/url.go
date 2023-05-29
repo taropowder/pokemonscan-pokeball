@@ -3,8 +3,10 @@ package utils
 import (
 	"crypto/tls"
 	"fmt"
-	"io/ioutil"
+	"github.com/PuerkitoBio/goquery"
+	"io"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -15,7 +17,7 @@ func GetHeaderStr(header http.Header) (res string) {
 	return
 }
 
-func GetUrlInfo(url string) (res string, statusCode int, respLength int, err error) {
+func GetUrlInfo(url string) (pageHash string, statusCode int, title string, respLength int, err error) {
 	//time.Sleep(time.Second * 4)
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
@@ -26,9 +28,46 @@ func GetUrlInfo(url string) (res string, statusCode int, respLength int, err err
 		return
 	}
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	res = Md5(string(body))
+	// HTML 解析 body,并提取其中所有 css 以及 js 链接
+	doc, err := goquery.NewDocumentFromReader(resp.Body)
+	if err != nil {
+		b := make([]byte, 0)
+		b, err = io.ReadAll(resp.Body)
+		if err != nil {
+			return
+		}
+		respLength = len(b)
+		return
+	}
+	// 获取 title
+
+	title = doc.Find("title").Text()
+
+	var cssLinks []string
+	var jsLinks []string
+
+	// 获取所有的 CSS 链接
+	doc.Find("link").Each(func(i int, s *goquery.Selection) {
+		if rel, _ := s.Attr("rel"); rel == "stylesheet" {
+			if href, ok := s.Attr("href"); ok {
+				cssLinks = append(cssLinks, href)
+			}
+		}
+	})
+
+	// 获取所有的 JavaScript 链接
+	doc.Find("script").Each(func(i int, s *goquery.Selection) {
+		if src, ok := s.Attr("src"); ok {
+			jsLinks = append(jsLinks, src)
+		}
+	})
+	hashString := doc.Text()
+	if len(cssLinks) != 0 || len(jsLinks) != 0 {
+		hashString = strings.Join(cssLinks, "|") + strings.Join(jsLinks, "|")
+	}
+	pageHash = Md5(hashString)
+
 	statusCode = resp.StatusCode
-	respLength = len(string(body))
+	respLength = len(hashString)
 	return
 }
