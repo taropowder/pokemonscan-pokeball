@@ -1,0 +1,40 @@
+package plugins
+
+import (
+	"fmt"
+	plugin_proto "pokemonscan-pokeball/src/proto/proto_struct/plugin"
+	"sync"
+	"testing"
+)
+
+func TestCommon(t *testing.T) {
+	p := CommonPlugin{Name: plugin_proto.CommonPluginName, WorkingTasks: &sync.Map{}}
+	err := p.Register(nil, ``)
+	if err != nil {
+		t.Error(err)
+	}
+	err = p.Run(123, `{
+  "image": "pokemonscan/common_python",
+  "config": {
+    "config_path": "/tmp/config.json",
+    "config_content": "{\"target\": \"https://zhejiang.dujia.qunar.com\"}"
+  },
+  "result_path": "/tmp/result.json",
+  "command": "python /tmp/main.py",
+  "file": {
+    "file_path": "/tmp/main.py",
+    "file_content": "aW1wb3J0IGpzb24KZnJvbSBiczQgaW1wb3J0IEJlYXV0aWZ1bFNvdXAKCmltcG9ydCByZXF1ZXN0cwppbXBvcnQgaGFzaGxpYgoKCgoKIyDku47mlofku7bkuK3op6PmnpBqc29uCmRlZiBwYXJzZV9qc29uX2ZpbGUoZmlsZV9wYXRoKToKICAgIHdpdGggb3BlbihmaWxlX3BhdGgsICdyJykgYXMgZjoKICAgICAgICBkYXRhID0ganNvbi5sb2FkKGYpCiAgICByZXR1cm4gZGF0YQoKCiMg6K+35rGCIOe9keWdgOW5tuiOt+WPlui/lOWbnuWGheWuuQpkZWYgZ2V0X3dlYnNpdGVfcmVzcCh1cmwpOgogICAgd2l0aCByZXF1ZXN0cy5nZXQodXJsKSBhcyByOgogICAgICAgIHJldHVybiByLnRleHQKCgojIOiuoeeul+mhtemdomhhc2gKZGVmIGdldF9oYXNoKHRleHQpOgogICAgc291cCA9IEJlYXV0aWZ1bFNvdXAodGV4dCwgJ2h0bWwucGFyc2VyJykKCiAgICAjIOeUqCBIVE1MIOino+aekCB0ZXh0ICzlubbojrflj5bpobXpnaLmiYDmnInnmoQgY3NzIOWSjCBKYXZhU2NyaXB0IOmTvuaOpQogICAgY3NzX2xpbmtzID0gW10KICAgIGZvciBsaW5rIGluIHNvdXAuZmluZF9hbGwoJ2xpbmsnKToKICAgICAgICByZWwgPSBsaW5rLmdldCgncmVsJykKICAgICAgICBpZiByZWwgYW5kICdzdHlsZXNoZWV0JyBpbiByZWw6CiAgICAgICAgICAgIGhyZWYgPSBsaW5rLmdldCgnaHJlZicpCiAgICAgICAgICAgIGNzc19saW5rcy5hcHBlbmQoaHJlZikKCiAgICAjIOiOt+WPluaJgOacieeahEphdmFTY3JpcHTpk77mjqUKICAgIGpzX2xpbmtzID0gW10KICAgIGZvciBzY3JpcHQgaW4gc291cC5maW5kX2FsbCgnc2NyaXB0Jyk6CiAgICAgICAgc3JjID0gc2NyaXB0LmdldCgnc3JjJykKICAgICAgICBpZiBzcmM6CiAgICAgICAgICAgIGpzX2xpbmtzLmFwcGVuZChzcmMpCgogICAgIyBwcmludCgnQ1NTIExpbmtzOicsIGNzc19saW5rcykKICAgICMgcHJpbnQoJ0phdmFTY3JpcHQgTGlua3M6JywganNfbGlua3MpCgogICAgaGFzaF9zdHJpbmcgPSAnfCcuam9pbihjc3NfbGlua3MpICsgJ3wnLmpvaW4oanNfbGlua3MpCiAgICAjIOiuoeeulyBoYXNoX3N0cmluZyBtZDUKICAgIG1kNSA9IGhhc2hsaWIubWQ1KCkKCiAgICAjIOabtOaWsGhhc2hsaWLlr7nosaHku6XlpITnkIbmlofmnKzlhoXlrrkKICAgIG1kNS51cGRhdGUoaGFzaF9zdHJpbmcuZW5jb2RlKCd1dGYtOCcpKQoKICAgICMg6K6h566X5paH5pys55qETUQ15YC8CiAgICByZXN1bHQgPSBtZDUuaGV4ZGlnZXN0KCkKICAgIHJldHVybiByZXN1bHQKCgppZiBfX25hbWVfXyA9PSAnX19tYWluX18nOgogICAgY29uZmlnX2RhdGEgPSBwYXJzZV9qc29uX2ZpbGUoIi90bXAvY29uZmlnLmpzb24iKQogICAgd2Vic2l0ZV9ib2R5ID0gZ2V0X3dlYnNpdGVfcmVzcChjb25maWdfZGF0YVsidGFyZ2V0Il0pCiAgICB3ZWJzaXRlX2hhc2ggPSBnZXRfaGFzaCh3ZWJzaXRlX2JvZHkpCiAgICBpbmZvID0ge30KICAgIGluZm9bInVybHMiXSA9IFtdCiAgICBpbmZvWyJob3N0cyJdID0gW10KICAgIGluZm9bImRvbWFpbnMiXSA9IFtdCiAgICBpbmZvWyJ3ZWJzaXRlcyJdID0gW3sidXJsIjpjb25maWdfZGF0YVsidGFyZ2V0Il0sInJlc3BIYXNoIjp3ZWJzaXRlX2hhc2h9XQogICAgaW5mb1siZXh0cmFzIl0gPSBbXQogICAgcmVzID0ge30KICAgIHJlc1snaW5mbyddID0gaW5mbwogICAgcmVzWyd2dWwnXSA9IHt9CiAgICAjIOWwhiBSZXN1bHQg5YaZ5YWlIGpzb24g5paH5Lu2CiAgICB3aXRoIG9wZW4oJy90bXAvcmVzdWx0Lmpzb24nLCAndycpIGFzIGY6CiAgICAgICAganNvbi5kdW1wKHJlcywgZiwgaW5kZW50PTQpCg=="
+  }
+}`)
+	if err != nil {
+		t.Error(err)
+	}
+
+	info, vuls, err := p.GetResult(123)
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(vuls)
+	fmt.Println(info)
+
+}

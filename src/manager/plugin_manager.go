@@ -67,18 +67,19 @@ func NewPokeballPluginManager(conn grpc.ClientConnInterface) *PluginManager {
 		}()
 	}
 	conf.PokeballPlugins = map[string]pokeball.Plugin{
-		plugin_proto.PassiveXrayPluginName: &plugins.PassiveXrayPlugin{Name: plugin_proto.PassiveXrayPluginName},
-		plugin_proto.OneForAllPluginName:   &plugins.OneForAllPlugins{Name: plugin_proto.OneForAllPluginName, WorkingTasks: &sync.Map{}},
-		plugin_proto.FofaPluginName:        &plugins.FofaPlugin{Name: plugin_proto.FofaPluginName, WorkingTasks: &sync.Map{}},
-		plugin_proto.NucleiPluginName:      &plugins.NucleiPlugin{Name: plugin_proto.NucleiPluginName},
-		plugin_proto.RadPluginName:         &plugins.RadPlugin{Name: plugin_proto.RadPluginName},
-		plugin_proto.RecorderPluginName:    &plugins.RecorderPlugin{Name: plugin_proto.RecorderPluginName},
-		plugin_proto.NmapPluginName:        &plugins.NmapPlugin{Name: plugin_proto.NmapPluginName},
-		plugin_proto.MasscanPluginName:     &plugins.MasscanPlugin{Name: plugin_proto.MasscanPluginName},
-		plugin_proto.ENScanPluginName:      &plugins.ENScanPlugin{Name: plugin_proto.ENScanPluginName, WorkingTasks: &sync.Map{}},
-		plugin_proto.ChaosPluginName:       &plugins.ChaosPlugin{Name: plugin_proto.ChaosPluginName, WorkingTasks: &sync.Map{}},
-		plugin_proto.XrayPluginName:        &plugins.XrayPlugin{Name: plugin_proto.XrayPluginName, WorkingTasks: &sync.Map{}},
-		plugin_proto.CdnCheckerPluginName:  &plugins.CdnCheckerPlugin{Name: plugin_proto.CdnCheckerPluginName, WorkingTasks: &sync.Map{}},
+		plugin_proto.PassiveXrayPluginName:         &plugins.PassiveXrayPlugin{Name: plugin_proto.PassiveXrayPluginName},
+		plugin_proto.OneForAllPluginName:           &plugins.OneForAllPlugins{Name: plugin_proto.OneForAllPluginName, WorkingTasks: &sync.Map{}},
+		plugin_proto.FofaPluginName:                &plugins.FofaPlugin{Name: plugin_proto.FofaPluginName, WorkingTasks: &sync.Map{}},
+		plugin_proto.NucleiPluginName:              &plugins.NucleiPlugin{Name: plugin_proto.NucleiPluginName},
+		plugin_proto.RadPluginName:                 &plugins.RadPlugin{Name: plugin_proto.RadPluginName},
+		plugin_proto.RecorderPluginName:            &plugins.RecorderPlugin{Name: plugin_proto.RecorderPluginName},
+		plugin_proto.NmapPluginName:                &plugins.NmapPlugin{Name: plugin_proto.NmapPluginName},
+		plugin_proto.MasscanPluginName:             &plugins.MasscanPlugin{Name: plugin_proto.MasscanPluginName},
+		plugin_proto.ENScanPluginName:              &plugins.ENScanPlugin{Name: plugin_proto.ENScanPluginName, WorkingTasks: &sync.Map{}},
+		plugin_proto.ChaosPluginName:               &plugins.ChaosPlugin{Name: plugin_proto.ChaosPluginName, WorkingTasks: &sync.Map{}},
+		plugin_proto.XrayPluginName:                &plugins.XrayPlugin{Name: plugin_proto.XrayPluginName, WorkingTasks: &sync.Map{}},
+		plugin_proto.CdnCheckerPluginName:          &plugins.CdnCheckerPlugin{Name: plugin_proto.CdnCheckerPluginName, WorkingTasks: &sync.Map{}},
+		plugin_proto.PackerFuzzerPluginsPluginName: &plugins.PackerFuzzerPlugin{Name: plugin_proto.PackerFuzzerPluginsPluginName},
 	}
 
 	//fmt.Printf("registerConfig.PluginsConfig %v\n", registerConfig.PluginsConfig)

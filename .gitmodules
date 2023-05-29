@@ -10,6 +10,3 @@
 [submodule "images/chaos"]
 	path = images/chaos
 	url = https://github.com/projectdiscovery/chaos-client.git
-[submodule "images/PackerFuzzer/src"]
-	path = images/PackerFuzzer/src
-	url = https://github.com/rtcatc/Packer-Fuzzer.git
