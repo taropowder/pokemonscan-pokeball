@@ -19,6 +19,8 @@ pokeball_rad
 pokeball_xray
 pokeball_nmap
 pokeball_chaos
+pokeball_packer_fuzzer
+pokeball_common_python
 )
 
 
