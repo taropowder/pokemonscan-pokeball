@@ -202,7 +202,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: images/chaos
+          context: images/packer_fuzzer
           push: true
           tags: pokemonscan/pokeball_packer_fuzzer:latest
   common_python:
@@ -224,6 +224,6 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: images/chaos
+          context: images/common_python
           push: true
           tags: pokemonscan/pokeball_common_python:latest
