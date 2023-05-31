@@ -80,6 +80,7 @@ func NewPokeballPluginManager(conn grpc.ClientConnInterface) *PluginManager {
 		plugin_proto.XrayPluginName:                &plugins.XrayPlugin{Name: plugin_proto.XrayPluginName, WorkingTasks: &sync.Map{}},
 		plugin_proto.CdnCheckerPluginName:          &plugins.CdnCheckerPlugin{Name: plugin_proto.CdnCheckerPluginName, WorkingTasks: &sync.Map{}},
 		plugin_proto.PackerFuzzerPluginsPluginName: &plugins.PackerFuzzerPlugin{Name: plugin_proto.PackerFuzzerPluginsPluginName},
+		plugin_proto.CommonPluginName:              &plugins.CommonPlugin{Name: plugin_proto.CommonPluginName, WorkingTasks: &sync.Map{}},
 	}
 
 	//fmt.Printf("registerConfig.PluginsConfig %v\n", registerConfig.PluginsConfig)
