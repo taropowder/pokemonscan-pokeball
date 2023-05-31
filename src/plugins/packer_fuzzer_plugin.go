@@ -1,6 +1,7 @@
 package plugins
 
 import (
+	"crypto/tls"
 	"database/sql"
 	"encoding/json"
 	"fmt"
@@ -9,13 +10,15 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
-	"os"
+	"io"
+	"net/http"
 	"path/filepath"
 	"pokemonscan-pokeball/src/proto/pokeball"
 	plugin_proto "pokemonscan-pokeball/src/proto/proto_struct/plugin"
 	"pokemonscan-pokeball/src/utils"
 	"pokemonscan-pokeball/src/utils/docker"
 	"strconv"
+	"time"
 )
 
 type PackerFuzzerPlugin struct {
@@ -81,7 +84,7 @@ func (p *PackerFuzzerPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, 
 		return nil, nil, err
 	}
 
-	defer os.RemoveAll(resultDir)
+	//defer os.RemoveAll(resultDir)
 
 	db, err := sql.Open("sqlite3", dbPath[0])
 	if err != nil {
@@ -96,14 +99,33 @@ func (p *PackerFuzzerPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, 
 			var name string
 			err = rows.Scan(&path, &name)
 
-			url := &pokeball.UrlInfo{
-				Url:    path,
-				Method: "UNKNOWN",
-				Tag:    "PackerFuzzer",
-				Hit:    name,
+			tr := &http.Transport{
+				TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+			}
+			client := http.Client{Timeout: 10 * time.Second, Transport: tr}
+			resp, err := client.Get(path)
+			if err != nil {
+				continue
+			}
+			defer resp.Body.Close()
+
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				continue
 			}
 
-			urls = append(urls, url)
+			if resp.StatusCode != 404 {
+				url := &pokeball.UrlInfo{
+					Url:    path,
+					Method: "GET",
+					Tag:    "PackerFuzzer",
+					Hit:    name,
+					Body:   string(body),
+				}
+
+				urls = append(urls, url)
+			}
+
 		}
 	}
 
