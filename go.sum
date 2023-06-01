@@ -133,6 +133,8 @@ github.com/taropowder/host-cdn-checker v0.0.0-20230528141544-a3221c6a13c1 h1:Bvu
 github.com/taropowder/host-cdn-checker v0.0.0-20230528141544-a3221c6a13c1/go.mod h1:ltK1oZUvyJvOBaRv9UBaWhwwnN4Z3K0kR345tjK0NJw=
 github.com/taropowder/host-cdn-checker v0.0.0-20230528144652-08161f28cb1d h1:5rmJAbyh9j70/+9zCmjOM0JGG9gdWgK7mg6VAxzzRso=
 github.com/taropowder/host-cdn-checker v0.0.0-20230528144652-08161f28cb1d/go.mod h1:ltK1oZUvyJvOBaRv9UBaWhwwnN4Z3K0kR345tjK0NJw=
+github.com/taropowder/host-cdn-checker v0.0.0-20230601144413-a0aa769ed49e h1:qLpqRVTvxGA/35mZ2Rnr1t0VrPs98+5orKgb8lWRQWY=
+github.com/taropowder/host-cdn-checker v0.0.0-20230601144413-a0aa769ed49e/go.mod h1:ltK1oZUvyJvOBaRv9UBaWhwwnN4Z3K0kR345tjK0NJw=
 github.com/tklauser/go-sysconf v0.3.11 h1:89WgdJhk5SNwJfu+GKyYveZ4IaJ7xAkecBo+KdJV0CM=
 github.com/tklauser/go-sysconf v0.3.11/go.mod h1:GqXfhXY3kiPa0nAXPDIQIWzJbMCB7AmcWpGR8lSZfqI=
 github.com/tklauser/numcpus v0.6.0 h1:kebhY2Qt+3U6RNK7UqpYNA+tJ23IBEGKkB7JQBfDYms=

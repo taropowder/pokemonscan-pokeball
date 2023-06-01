@@ -11,7 +11,7 @@ require (
 	github.com/robfig/cron v1.2.0
 	github.com/shirou/gopsutil v3.21.11+incompatible
 	github.com/sirupsen/logrus v1.9.2
-	github.com/taropowder/host-cdn-checker v0.0.0-20230528144652-08161f28cb1d
+	github.com/taropowder/host-cdn-checker v0.0.0-20230601144413-a0aa769ed49e
 	github.com/urfave/cli v1.22.12
 	google.golang.org/grpc v1.53.0
 	google.golang.org/protobuf v1.28.1
