@@ -13,6 +13,7 @@ import (
 	"pokemonscan-pokeball/src/utils"
 	"pokemonscan-pokeball/src/utils/docker"
 	"strconv"
+	"strings"
 )
 
 type ENScanPlugin struct {
@@ -159,6 +160,11 @@ func (p *ENScanPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeb
 			extra.Detail = icp.Icp
 			extra.Type = "icp"
 			extras = append(extras, extra)
+
+			// black list
+			if strings.Contains(icp.Domain, ".gov") {
+				continue
+			}
 
 			respHash, statusCode, title, respLength, err := utils.GetUrlInfo(
 				fmt.Sprintf("http://%s", icp.Website))
