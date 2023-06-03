@@ -3,7 +3,7 @@ name: Build Images
 on:
   push:
     branches:
-      - plugin_*
+      - old_plugin_build_*
 
 jobs:
   xray:

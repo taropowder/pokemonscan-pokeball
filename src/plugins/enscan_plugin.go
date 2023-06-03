@@ -5,132 +5,65 @@ import (
 	"fmt"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
-	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
-	"io/ioutil"
 	"os"
-	"path"
+	"path/filepath"
 	"pokemonscan-pokeball/src/proto/pokeball"
 	plugin_proto "pokemonscan-pokeball/src/proto/proto_struct/plugin"
 	"pokemonscan-pokeball/src/utils"
 	"pokemonscan-pokeball/src/utils/docker"
-	"sync"
-	"time"
+	"strconv"
 )
 
 type ENScanPlugin struct {
-	Name         string
-	WorkingTasks *sync.Map
+	Name string
 }
 
-type ENScanResult map[string]struct {
-	Id          string      `json:"Id"`
-	Name        string      `json:"Name"`
-	Pid         string      `json:"Pid"`
-	LegalPerson string      `json:"LegalPerson"`
-	OpenStatus  string      `json:"OpenStatus"`
-	Email       string      `json:"Email"`
-	Telephone   string      `json:"Telephone"`
-	SType       string      `json:"SType"`
-	RegCode     string      `json:"RegCode"`
-	BranchNum   int         `json:"BranchNum"`
-	InvestNum   int         `json:"InvestNum"`
-	InTime      time.Time   `json:"InTime"`
-	PidS        interface{} `json:"PidS"`
-	Infos       struct {
-		App []struct {
-			Type    int         `json:"Type"`
-			Raw     string      `json:"Raw"`
-			Str     string      `json:"Str"`
-			Num     int         `json:"Num"`
-			Index   int         `json:"Index"`
-			Indexes interface{} `json:"Indexes"`
-		} `json:"app"`
-		EnterpriseInfo []struct {
-			Type    int         `json:"Type"`
-			Raw     string      `json:"Raw"`
-			Str     string      `json:"Str"`
-			Num     int         `json:"Num"`
-			Index   int         `json:"Index"`
-			Indexes interface{} `json:"Indexes"`
-		} `json:"enterprise_info"`
-		Icp []struct {
-			Type    int         `json:"Type"`
-			Raw     string      `json:"Raw"`
-			Str     string      `json:"Str"`
-			Num     int         `json:"Num"`
-			Index   int         `json:"Index"`
-			Indexes interface{} `json:"Indexes"`
-		} `json:"icp"`
-		Wechat []struct {
-			Type    int         `json:"Type"`
-			Raw     string      `json:"Raw"`
-			Str     string      `json:"Str"`
-			Num     int         `json:"Num"`
-			Index   int         `json:"Index"`
-			Indexes interface{} `json:"Indexes"`
-		} `json:"wechat"`
-		Weibo []struct {
-			Type    int         `json:"Type"`
-			Raw     string      `json:"Raw"`
-			Str     string      `json:"Str"`
-			Num     int         `json:"Num"`
-			Index   int         `json:"Index"`
-			Indexes interface{} `json:"Indexes"`
-		} `json:"weibo"`
-	} `json:"Infos"`
-	EnInfos interface{} `json:"EnInfos"`
-	EnInfo  interface{} `json:"EnInfo"`
-}
-
-type AqcIcpResult struct {
-	Domain   string `json:"domain"`
-	SiteName string `json:"siteName"`
-	HomeSite string `json:"homeSite"`
-	IcpNo    string `json:"icpNo"`
-	InFrom   string `json:"inFrom"`
-}
-
-type AqcAppResult struct {
-	Name      string `json:"name"`
-	Classify  string `json:"classify"`
-	LogoWord  string `json:"logoWord"`
-	Logo      string `json:"logo"`
-	LogoBrief string `json:"logoBrief"`
-	InFrom    string `json:"inFrom"`
-}
-
-type TycIcpResult struct {
-	CompanyName          string      `json:"companyName"`
-	CompanyType          string      `json:"companyType"`
-	WebName              string      `json:"webName"`
-	ExamineDate          string      `json:"examineDate"`
-	Ym                   string      `json:"ym"`
-	BusinessId           string      `json:"businessId"`
-	PublicSecurityRecord interface{} `json:"publicSecurityRecord"`
-	WebStatus            int         `json:"webStatus"`
-	WebSiteSafe          map[string]struct {
-		Whitetype       string `json:"whitetype"`
-		WebsiteRiskType string `json:"websiteRiskType"`
-		WebStatus       string `json:"webStatus"`
-		Url             string `json:"url"`
-	} `json:"webSiteSafe"`
-	Liscense string   `json:"liscense"`
-	WebSite  []string `json:"webSite"`
-	InFrom   string   `json:"inFrom"`
-}
-
-type TycAppResult struct {
-	Brief      string `json:"brief"`
-	Classes    string `json:"classes"`
-	Icon       string `json:"icon"`
-	Name       string `json:"name"`
-	FilterName string `json:"filterName"`
-	BusinessId string `json:"businessId"`
-	Id         int    `json:"id"`
-	Type       string `json:"type"`
-	Uuid       string `json:"uuid"`
-	InFrom     string `json:"inFrom"`
+type ENScanResult struct {
+	App []struct {
+		BundleId    interface{} `json:"bundle_id"`
+		Category    string      `json:"category"`
+		Description string      `json:"description"`
+		Link        interface{} `json:"link"`
+		Logo        string      `json:"logo"`
+		Market      interface{} `json:"market"`
+		Name        string      `json:"name"`
+		UpdateAt    interface{} `json:"update_at"`
+		Version     interface{} `json:"version"`
+	} `json:"app"`
+	EnterpriseInfo []struct {
+		Address           string `json:"address"`
+		Email             string `json:"email"`
+		IncorporationDate string `json:"incorporation_date"`
+		LegalPerson       string `json:"legal_person"`
+		Name              string `json:"name"`
+		Phone             string `json:"phone"`
+		Pid               string `json:"pid"`
+		RegCode           string `json:"reg_code"`
+		RegisteredCapital string `json:"registered_capital"`
+		Scope             string `json:"scope"`
+		Status            string `json:"status"`
+	} `json:"enterprise_info"`
+	Icp []struct {
+		CompanyName interface{} `json:"company_name"`
+		Domain      string      `json:"domain"`
+		Icp         string      `json:"icp"`
+		Website     string      `json:"website"`
+		WesbiteName string      `json:"wesbite_name"`
+	} `json:"icp"`
+	Wechat []struct {
+		Avatar      string `json:"avatar"`
+		Description string `json:"description"`
+		Name        string `json:"name"`
+		Qrcode      string `json:"qrcode"`
+		WechatId    string `json:"wechat_id"`
+	} `json:"wechat"`
+	Weibo []struct {
+		Avatar      string `json:"avatar"`
+		Description string `json:"description"`
+		Name        string `json:"name"`
+		ProfileUrl  string `json:"profile_url"`
+	} `json:"weibo"`
 }
 
 func (p *ENScanPlugin) Register(conn grpc.ClientConnInterface, pluginConfig string) error {
@@ -144,14 +77,13 @@ func (p *ENScanPlugin) Run(taskId int32, pluginConfig string) error {
 	if err := json.Unmarshal([]byte(pluginConfig), &config); err != nil {
 		return err
 	}
-	p.WorkingTasks.Store(taskId, config)
 
-	resultDir := utils.GetPluginTmpDir(p.Name, "result")
+	resultDir := utils.GetPluginTmpDir(p.Name, filepath.Join("result", strconv.Itoa(int(taskId))))
 	containerName := utils.GetPluginContainerName(p.Name, taskId)
 
 	containerConfig := &container.Config{
 		Image: plugin_proto.ENScanImageName,
-		Cmd: []string{"--json-output", "-o", fmt.Sprintf("/app/res/enscan_qs-%d", taskId),
+		Cmd: []string{"-json", "-o", "/tmp/res",
 			"-n", config.Target, "-type", config.Type,
 		},
 		Hostname: containerName,
@@ -163,7 +95,7 @@ func (p *ENScanPlugin) Run(taskId int32, pluginConfig string) error {
 			{
 				Type:   mount.TypeBind,
 				Source: resultDir,
-				Target: "/app/res",
+				Target: "/tmp/res",
 			},
 		},
 	}
@@ -189,111 +121,92 @@ func (p *ENScanPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeb
 	hosts := make([]*pokeball.HostInfo, 0)
 	extras := make([]*pokeball.ExtraInfo, 0)
 
-	resultDir := utils.GetPluginTmpDir(p.Name, "result")
-	enscanResultFile := path.Join(resultDir, fmt.Sprintf("enscan_qs-%d", taskId))
+	resultDir := utils.GetPluginTmpDir(p.Name, filepath.Join("result", strconv.Itoa(int(taskId))))
 
-	fileBytes, err := ioutil.ReadFile(enscanResultFile)
+	enscanResultFiles, err := filepath.Glob(fmt.Sprintf("%s/*.json", resultDir))
 	if err != nil {
 		return nil, nil, err
 	}
 
-	defer p.WorkingTasks.Delete(taskId)
-	defer os.Remove(enscanResultFile)
+	defer os.Remove(resultDir)
 
-	var res ENScanResult
-
-	err = json.Unmarshal(fileBytes, &res)
-	if err != nil {
-		log.Error(err)
-		return nil, nil, err
-	}
-	for pluginName, plugin := range res {
-		for _, icp := range plugin.Infos.Icp {
-			switch pluginName {
-			case "aqc":
-				var i AqcIcpResult
-				err = json.Unmarshal([]byte(icp.Raw), &i)
-				if err != nil {
-					log.Error(err)
-					continue
-				}
-				if utils.CheckDomain(i.Domain) == nil {
-					domain := &pokeball.DomainInfo{
-						Name:   i.Domain,
-						Plugin: "ENScan-aqc",
-						Root:   true,
-					}
-					domains = append(domains, domain)
-				}
-				if err != nil {
-					log.Errorf("not domain format %s", i.Domain)
-				}
-
-				extras = append(extras, &pokeball.ExtraInfo{
-					Type:   "IPC",
-					Short:  i.IcpNo,
-					Detail: icp.Raw,
-					Plugin: "ENScan-aqc",
-				})
-			case "tyc":
-				var i TycIcpResult
-				err = json.Unmarshal([]byte(icp.Raw), &i)
-				if err != nil {
-					log.Error(err)
-					continue
-				}
-				if utils.CheckDomain(i.Ym) == nil {
-					domains = append(domains, &pokeball.DomainInfo{
-						Name:   i.Ym,
-						Plugin: "ENScan-tyc",
-						Root:   true,
-					})
-				}
-				extras = append(extras, &pokeball.ExtraInfo{
-					Type:   "IPC",
-					Short:  i.Liscense,
-					Detail: icp.Raw,
-					Plugin: "ENScan-tyc",
-				})
-
-			default:
-				continue
-			}
+	for _, enscanResultFile := range enscanResultFiles {
+		fileBytes, err := os.ReadFile(enscanResultFile)
+		if err != nil {
+			return nil, nil, err
 		}
 
-		for _, app := range plugin.Infos.App {
-			switch pluginName {
-			case "aqc":
-				var i AqcAppResult
-				err = json.Unmarshal([]byte(app.Raw), &i)
-				if err != nil {
-					log.Error(err)
-					continue
-				}
+		var res ENScanResult
 
-				extras = append(extras, &pokeball.ExtraInfo{
-					Type:   "APK",
-					Short:  i.Name,
-					Detail: app.Raw,
-					Plugin: "ENScan-aqc",
-				})
-			case "tyc":
-				var i TycAppResult
-				err = json.Unmarshal([]byte(app.Raw), &i)
-				if err != nil {
-					log.Error(err)
-					continue
-				}
-				extras = append(extras, &pokeball.ExtraInfo{
-					Type:   "APK",
-					Short:  i.Name,
-					Detail: app.Raw,
-					Plugin: "ENScan-tyc",
-				})
+		err = json.Unmarshal(fileBytes, &res)
+		if err != nil {
+			continue
+		}
 
-			default:
+		for _, app := range res.App {
+			extra := &pokeball.ExtraInfo{}
+			extra.Plugin = "ENScan"
+			extra.Short = app.Name
+			extra.Detail = app.Description
+			extra.Type = "app"
+			extras = append(extras, extra)
+		}
+
+		for _, icp := range res.Icp {
+			extra := &pokeball.ExtraInfo{}
+			extra.Plugin = "ENScan"
+			extra.Short = icp.Domain
+			extra.Detail = icp.Icp
+			extra.Type = "icp"
+			extras = append(extras, extra)
+
+			respHash, statusCode, title, respLength, err := utils.GetUrlInfo(
+				fmt.Sprintf("http://%s", icp.Website))
+			if err != nil {
 				continue
 			}
+			websites = append(websites, &pokeball.WebsiteInfo{
+				Url:        fmt.Sprintf("http://%s", icp.Website),
+				Title:      title,
+				StatusCode: int32(statusCode),
+				RespHash:   respHash,
+				Length:     int32(respLength),
+				Plugin:     "ENScan",
+			})
+
+			domains = append(domains, &pokeball.DomainInfo{
+				Name:   icp.Domain,
+				Plugin: "ENScan",
+				Root:   true,
+			})
+
+		}
+
+		for _, wechat := range res.Wechat {
+			extra := &pokeball.ExtraInfo{}
+			extra.Plugin = "ENScan"
+			extra.Short = wechat.Name
+			extra.Detail = wechat.Description
+			extra.Type = "wechat"
+			extras = append(extras, extra)
+		}
+
+		for _, weibo := range res.Weibo {
+			extra := &pokeball.ExtraInfo{}
+			extra.Plugin = "ENScan"
+			extra.Short = weibo.Name
+			extra.Detail = weibo.Description
+			extra.Type = "weibo"
+			extras = append(extras, extra)
+		}
+
+		for _, enterpriseInfo := range res.EnterpriseInfo {
+			extra := &pokeball.ExtraInfo{}
+			extra.Plugin = "ENScan"
+			extra.Short = enterpriseInfo.Name
+			extra.Detail = enterpriseInfo.Scope
+			extra.Type = "enterprise"
+			extras = append(extras, extra)
 		}
 
 	}
