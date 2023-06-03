@@ -135,9 +135,34 @@ func (p *ChaosPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeba
 				Plugin: "Chaos",
 			})
 
+			httpsUrl := "https://" + fullDomain + "/"
+			wg.Add(1)
+
 			go func() {
 				defer wg.Done()
 				respHash, statusCode, title, respLength, err := utils.GetUrlInfo(url)
+				if err != nil {
+					log.Errorf("error for get resp for %s : %v", url, err)
+				} else {
+					if statusCode != 400 {
+						websites = append(websites, &pokeball.WebsiteInfo{
+							Url:        url,
+							Title:      title,
+							StatusCode: int32(statusCode),
+							RespHash:   respHash,
+							Length:     int32(respLength),
+							Plugin:     "Chaos",
+						})
+
+					}
+
+				}
+
+			}()
+
+			go func() {
+				defer wg.Done()
+				respHash, statusCode, title, respLength, err := utils.GetUrlInfo(httpsUrl)
 				if err != nil {
 					log.Errorf("error for get resp for %s : %v", url, err)
 				} else {

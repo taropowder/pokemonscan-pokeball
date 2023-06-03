@@ -11,7 +11,7 @@ import (
 	"github.com/docker/docker/client"
 	"github.com/docker/go-connections/nat"
 	log "github.com/sirupsen/logrus"
-	plugin_proto "pokemonscan-pokeball/src/proto/proto_struct/plugin"
+	"strings"
 	"time"
 )
 
@@ -46,8 +46,8 @@ func CleanHangContainers() {
 	}
 
 	for _, runningContainer := range containers {
-		if runningContainer.Image == plugin_proto.RadImageName ||
-			runningContainer.Image == plugin_proto.NucleiImageName {
+		containerNames := strings.Join(runningContainer.Names, ",")
+		if strings.Contains(containerNames, "pokemon") && strings.Contains(containerNames, "daemon") {
 			runningTime := now - runningContainer.Created
 			if runningTime > maxRunningSecond {
 
