@@ -166,6 +166,12 @@ func (p *ENScanPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeb
 				continue
 			}
 
+			domains = append(domains, &pokeball.DomainInfo{
+				Name:   icp.Domain,
+				Plugin: "ENScan",
+				Root:   true,
+			})
+
 			respHash, statusCode, title, respLength, err := utils.GetUrlInfo(
 				fmt.Sprintf("http://%s", icp.Website))
 			if err != nil {
@@ -178,12 +184,6 @@ func (p *ENScanPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeb
 				RespHash:   respHash,
 				Length:     int32(respLength),
 				Plugin:     "ENScan",
-			})
-
-			domains = append(domains, &pokeball.DomainInfo{
-				Name:   icp.Domain,
-				Plugin: "ENScan",
-				Root:   true,
 			})
 
 		}
