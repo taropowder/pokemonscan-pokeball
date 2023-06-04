@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 func GetHeaderStr(header http.Header) (res string) {
@@ -42,6 +43,9 @@ func GetUrlInfo(url string) (pageHash string, statusCode int, title string, resp
 	// 获取 title
 
 	title = doc.Find("title").Text()
+	if !utf8.ValidString(title) {
+		title = "error utf8 encode"
+	}
 
 	var cssLinks []string
 	var jsLinks []string

@@ -47,7 +47,7 @@ func CleanHangContainers() {
 
 	for _, runningContainer := range containers {
 		containerNames := strings.Join(runningContainer.Names, ",")
-		if strings.Contains(containerNames, "pokemon") && strings.Contains(containerNames, "daemon") {
+		if strings.Contains(containerNames, "pokemon") && !strings.Contains(containerNames, "daemon") {
 			runningTime := now - runningContainer.Created
 			if runningTime > maxRunningSecond {
 
