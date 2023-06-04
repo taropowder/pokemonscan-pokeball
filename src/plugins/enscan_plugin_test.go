@@ -12,7 +12,10 @@ func TestEnscanPlugin(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	err = p.Run(0, `{"key":"","target":"jd.com"}`)
+	err = p.Run(0, `{
+            "target": "郑州商学院",
+            "type": "aqc,tyc"
+          }`)
 	if err != nil {
 		t.Error(err)
 	}
