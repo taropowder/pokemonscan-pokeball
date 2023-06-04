@@ -11,7 +11,7 @@ ENV GO111MODULE=on \
 
 RUN go mod download
 
-RUN CGO_ENABLED=0 go build -trimpath -o /ENScan_GO/enscan .
+RUN CGO_ENABLED=0 go build -trimpath -o /ENScan_GO/enscan -buildvcs=false .
 
 WORKDIR /ENScan_GO
 
