@@ -10,3 +10,6 @@
 [submodule "images/packer_fuzzer/src"]
 	path = images/packer_fuzzer/src
 	url = https://github.com/rtcatc/Packer-Fuzzer.git
+[submodule "images/enscan/src"]
+	path = images/enscan/src
+	url = https://github.com/wgpsec/ENScan_GO
