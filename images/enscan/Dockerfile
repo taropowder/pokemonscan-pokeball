@@ -7,6 +7,8 @@ WORKDIR /app
 ENV GO111MODULE=on \
     GOPROXY=direct
 
+RUN rm /app/go.sum
+
 
 RUN go mod download
 
