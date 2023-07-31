@@ -124,10 +124,8 @@ You are welcome to contribute code to PokemonScan
 
 If you have any ideas, suggestions or bugs, please submit an issue to me.
 
-~~或者有什么建议和想法您也可以直接从通过公众号发给我😂~~  
-~~原谅社恐人不想拉群~~
-配置确实有些复杂,师傅有问题可以加群讨论   
+或者有什么建议和想法您也可以直接从通过公众号发给我😂
 
-![wechat_group](doc/img/gz.jpg)    <img src="doc/img/wechat-group.png" width="260px">
+![wechat_group](doc/img/gz.jpg)  
 
 
