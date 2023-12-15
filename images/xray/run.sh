@@ -14,6 +14,6 @@ if [[ $PARAMETER =~ "listen" ]]; then
     done
 else
   echo "xray $PARAMETER"
-  /app/xray PARAMETER
+  /app/xray $PARAMETER
 fi
 
