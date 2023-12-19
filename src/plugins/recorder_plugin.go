@@ -133,11 +133,13 @@ func (plugin *RecorderPlugin) Register(conn grpc.ClientConnInterface, pluginConf
 	p.SetRequestModifier(plugin)
 	p.SetResponseModifier(plugin)
 
-	u, err := url.Parse(fmt.Sprintf("http://%s", downstreamProxyUrl))
-	if err != nil {
-		log.Fatal(err)
+	if downstreamProxyUrl != "" {
+		u, err := url.Parse(fmt.Sprintf("http://%s", downstreamProxyUrl))
+		if err != nil {
+			log.Fatal(err)
+		}
+		p.SetDownstreamProxy(u)
 	}
-	p.SetDownstreamProxy(u)
 
 	log.Infof("[RecorderPlugin] : start proxy :%d", config.ListenPort)
 
