@@ -11,7 +11,7 @@ ADD src /build
 
 RUN apk update && apk add build-base
 
-RUN  mkdir /app && make build
+RUN  mkdir /app && ls  -l && make build
 
 RUN cp /build/cmd/rotateproxy/rotateproxy /app/rotateproxy
 
