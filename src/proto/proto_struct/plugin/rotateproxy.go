@@ -1,14 +1,17 @@
 package plugin
 
-import "github.com/taropowder/host-cdn-checker/config"
-
 const (
-	RotateProxyPluginName = "CdnChecker"
+	RotateProxyPluginName = "RotateProxy"
 	RotateProxyImageName  = "pokemonscan/pokeball_rotateproxy"
 )
 
 type RotateProxyConfig struct {
-	Ip string `json:"ip"`
-
-	CheckerConfig config.Config `json:"checker_config"`
+	CommandArgs string `json:"command_args"`
+	ListenPort  int    `json:"listen_port"`
+	Email       string `json:"email"`
+	Token       string `json:"token"`
+	Check       string `json:"check"`
+	CheckWords  string `json:"check_words"`
+	SocksUser   string `json:"socks_user"`
+	SocksPasswd string `json:"socks_passwd"`
 }

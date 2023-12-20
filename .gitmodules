@@ -3,7 +3,7 @@
 	url = https://github.com/shmilylty/OneForAll.git
 [submodule "images/rotateproxy/src"]
 	path = images/rotateproxy/src
-	url = https://github.com/akkuman/rotateproxy.git
+	url = https://github.com/taropowder/rotateproxy.git
 [submodule "images/masscan/src"]
 	path = images/masscan/src
 	url = https://github.com/robertdavidgraham/masscan.git
