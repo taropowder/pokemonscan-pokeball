@@ -137,7 +137,7 @@ func (p *PackerFuzzerPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, 
 			var url string
 			err = rows.Scan(&url)
 
-			respHash, statusCode, title, respLength, err := utils.GetUrlInfo(url)
+			respHash, statusCode, title, respLength, err := utils.GetUrlInfo(url, "")
 			if err != nil {
 				log.Errorf("error for get resp for %s : %v", url, err)
 				continue

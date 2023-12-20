@@ -173,7 +173,7 @@ func (p *ENScanPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeb
 			})
 
 			respHash, statusCode, title, respLength, err := utils.GetUrlInfo(
-				fmt.Sprintf("http://%s", icp.Website))
+				fmt.Sprintf("http://%s", icp.Website), "")
 			if err != nil {
 				continue
 			}

@@ -6,6 +6,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"io"
 	"net/http"
+	net_url "net/url"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -18,11 +19,19 @@ func GetHeaderStr(header http.Header) (res string) {
 	return
 }
 
-func GetUrlInfo(url string) (pageHash string, statusCode int, title string, respLength int, err error) {
+func GetUrlInfo(url string, proxyUrl string) (pageHash string, statusCode int, title string, respLength int, err error) {
 	//time.Sleep(time.Second * 4)
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
+
+	if proxyUrl != "" {
+		if strings.Contains(proxyUrl, "//") {
+			proxyURL, _ := net_url.Parse("http://" + proxyUrl)
+			tr.Proxy = http.ProxyURL(proxyURL)
+		}
+	}
+
 	client := http.Client{Timeout: 10 * time.Second, Transport: tr}
 	resp, err := client.Get(url)
 	if err != nil {
