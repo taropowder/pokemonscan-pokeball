@@ -6,7 +6,8 @@ const (
 )
 
 type ChaosConfig struct {
-	Target  string `json:"target"`
-	Key     string `json:"key"`
-	Timeout int    `json:"timeout"`
+	Target           string `json:"target"`
+	Key              string `json:"key"`
+	Timeout          int    `json:"timeout"`
+	DownstreamPlugin string `json:"downstream_plugin"`
 }

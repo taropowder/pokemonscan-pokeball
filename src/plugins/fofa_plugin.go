@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"pokemonscan-pokeball/src/conf"
 	"pokemonscan-pokeball/src/proto/pokeball"
 	plugin_proto "pokemonscan-pokeball/src/proto/proto_struct/plugin"
 	"pokemonscan-pokeball/src/utils"
@@ -155,6 +156,16 @@ func (p *FofaPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokebal
 		return nil, nil, nil
 	}
 
+	downstreamProxyUrl := ""
+
+	if config.DownstreamPlugin != "" {
+		if downstreamProxyPlugin, ok := conf.PokeballPlugins[config.DownstreamPlugin]; ok {
+			// 存在
+			downstreamProxyUrl = downstreamProxyPlugin.GetListenAddress(true)
+		}
+
+	}
+
 	defer p.WorkingTasks.Delete(taskId)
 
 	resultDir := utils.GetPluginTmpDir(p.Name, "result")
@@ -191,7 +202,7 @@ func (p *FofaPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokebal
 					wg.Add(1)
 					go func() {
 						defer wg.Done()
-						respHash, statusCode, title, respLength, err := utils.GetUrlInfo(url)
+						respHash, statusCode, title, respLength, err := utils.GetUrlInfo(url, downstreamProxyUrl)
 						if err != nil {
 							log.Errorf("error for get resp for %s : %v", url, err)
 							return

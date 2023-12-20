@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"pokemonscan-pokeball/src/conf"
 	"pokemonscan-pokeball/src/proto/pokeball"
 	plugin_proto "pokemonscan-pokeball/src/proto/proto_struct/plugin"
 	"pokemonscan-pokeball/src/utils"
@@ -95,6 +96,16 @@ func (p *ChaosPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeba
 		return nil, nil, nil
 	}
 
+	downstreamProxyUrl := ""
+
+	if config.DownstreamPlugin != "" {
+		if downstreamProxyPlugin, ok := conf.PokeballPlugins[config.DownstreamPlugin]; ok {
+			// 存在
+			downstreamProxyUrl = downstreamProxyPlugin.GetListenAddress(true)
+		}
+
+	}
+
 	resultDir := utils.GetPluginTmpDir(p.Name, "result")
 	chaosResultFile := path.Join(resultDir, fmt.Sprintf("chaos-%d.json", taskId))
 
@@ -140,7 +151,7 @@ func (p *ChaosPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeba
 
 			go func() {
 				defer wg.Done()
-				respHash, statusCode, title, respLength, err := utils.GetUrlInfo(url)
+				respHash, statusCode, title, respLength, err := utils.GetUrlInfo(url, downstreamProxyUrl)
 				if err != nil {
 					log.Errorf("error for get resp for %s : %v", url, err)
 				} else {
@@ -162,7 +173,7 @@ func (p *ChaosPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeba
 
 			go func() {
 				defer wg.Done()
-				respHash, statusCode, title, respLength, err := utils.GetUrlInfo(httpsUrl)
+				respHash, statusCode, title, respLength, err := utils.GetUrlInfo(httpsUrl, downstreamProxyUrl)
 				if err != nil {
 					log.Errorf("error for get resp for %s : %v", url, err)
 				} else {

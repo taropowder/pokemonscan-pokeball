@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"pokemonscan-pokeball/src/conf"
 	"pokemonscan-pokeball/src/proto/pokeball"
 	plugin_proto "pokemonscan-pokeball/src/proto/proto_struct/plugin"
 	"pokemonscan-pokeball/src/utils"
@@ -135,6 +136,16 @@ func (p *OneForAllPlugins) GetResult(taskId int32) (result *pokeball.ReportInfoA
 		return nil, nil, nil
 	}
 
+	downstreamProxyUrl := ""
+
+	if config.DownstreamPlugin != "" {
+		if downstreamProxyPlugin, ok := conf.PokeballPlugins[config.DownstreamPlugin]; ok {
+			// 存在
+			downstreamProxyUrl = downstreamProxyPlugin.GetListenAddress(true)
+		}
+
+	}
+
 	defer p.WorkingTasks.Delete(taskId)
 
 	vul = nil
@@ -178,7 +189,7 @@ func (p *OneForAllPlugins) GetResult(taskId int32) (result *pokeball.ReportInfoA
 			wg.Add(1)
 			go func() {
 				defer wg.Done()
-				respHash, statusCode, title, respLength, err := utils.GetUrlInfo(r.Url)
+				respHash, statusCode, title, respLength, err := utils.GetUrlInfo(r.Url, downstreamProxyUrl)
 				if err != nil {
 					log.Errorf("error for get resp for %s : %v", r.Url, err)
 					return
