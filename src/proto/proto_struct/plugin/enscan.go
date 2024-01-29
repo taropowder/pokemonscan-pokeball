@@ -6,6 +6,7 @@ const (
 )
 
 type ENScanConfig struct {
-	Target string `json:"target"`
-	Type   string `json:"type"`
+	Target           string `json:"target"`
+	Type             string `json:"type"`
+	ENScanConfigFile string `json:"enscan_config_file"`
 }

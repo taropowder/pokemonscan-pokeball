@@ -82,6 +82,32 @@ func (p *ENScanPlugin) Run(taskId int32, pluginConfig string) error {
 	resultDir := utils.GetPluginTmpDir(p.Name, filepath.Join("result", strconv.Itoa(int(taskId))))
 	containerName := utils.GetPluginContainerName(p.Name, taskId)
 
+	configDir := utils.GetPluginTmpDir(p.Name, "config")
+
+	mounts := make([]mount.Mount, 0)
+
+	enscanConfigFile := ""
+	if config.ENScanConfigFile != "" {
+		var err error
+		enscanConfigFile, err = utils.WriteFileFromBase64(configDir, fmt.Sprintf(radConfigFileFormat, taskId), config.ENScanConfigFile)
+		if err != nil {
+			enscanConfigFile = ""
+		} else {
+			defer os.Remove(enscanConfigFile)
+			mounts = append(mounts, mount.Mount{
+				Type:   mount.TypeBind,
+				Source: enscanConfigFile,
+				Target: "/ENScan_GO/config.yaml",
+			})
+		}
+	}
+
+	mounts = append(mounts, mount.Mount{
+		Type:   mount.TypeBind,
+		Source: resultDir,
+		Target: "/tmp/res",
+	})
+
 	containerConfig := &container.Config{
 		Image: plugin_proto.ENScanImageName,
 		Cmd: []string{"-json", "-o", "/tmp/res",
@@ -92,13 +118,7 @@ func (p *ENScanPlugin) Run(taskId int32, pluginConfig string) error {
 
 	hostConfig := &container.HostConfig{AutoRemove: true,
 		ExtraHosts: []string{"host.docker.internal:host-gateway"},
-		Mounts: []mount.Mount{
-			{
-				Type:   mount.TypeBind,
-				Source: resultDir,
-				Target: "/tmp/res",
-			},
-		},
+		Mounts:     mounts,
 	}
 
 	err := docker.WaitForRun(containerConfig, hostConfig, nil, containerName)

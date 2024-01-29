@@ -1,7 +1,9 @@
 package plugins
 
 import (
+	"encoding/base64"
 	"fmt"
+	"os"
 	plugin_proto "pokemonscan-pokeball/src/proto/proto_struct/plugin"
 	"testing"
 )
@@ -12,10 +14,20 @@ func TestEnscanPlugin(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	err = p.Run(0, `{
+
+	data, err := os.ReadFile("/tmp/poke_test/config.yaml")
+	if err != nil {
+		fmt.Println("读取文件错误:", err)
+		return
+	}
+
+	base64Data := base64.StdEncoding.EncodeToString(data)
+
+	err = p.Run(0, fmt.Sprintf(`{
             "target": "郑州商学院",
-            "type": "aqc,tyc"
-          }`)
+            "type": "aqc",
+           "enscan_config_file": "%s"
+          }`, base64Data))
 	if err != nil {
 		t.Error(err)
 	}
