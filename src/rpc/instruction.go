@@ -16,4 +16,5 @@ var RunningInstructions = map[string]Instruction{
 	constant.Restart:            &instructions.RestartInstruction{},
 	constant.ContinueTask:       &instructions.ContinueTaskInstruction{},
 	constant.UpdateConfig:       &instructions.UpdateConfigInstruction{},
+	constant.UpdateImage:        &instructions.UpdateImageInstruction{},
 }
