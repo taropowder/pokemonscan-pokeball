@@ -7,3 +7,5 @@ const Restart = "Restart"
 const ContinueTask = "ContinueTask"
 
 const UpdateConfig = "UpdateConfig"
+
+const UpdateImage = "UpdateImage"
