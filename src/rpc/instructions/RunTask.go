@@ -37,7 +37,7 @@ func (instruction *TunTaskInstruction) RunInstruction() {
 			taskConfig := proto_struct.TaskConfig{PluginsConfig: make(proto_struct.TaskPluginConfig, 0)}
 			respPluginConfig := resp.TaskConfig
 			if err := json.Unmarshal([]byte(respPluginConfig), &taskConfig); err != nil {
-				log.Errorf("err when heartbeat respPluginConfig %v", err)
+				log.Errorf("err when heartbeat respPluginConfig on run task %v", err)
 			}
 			manager.PluginsManager.AddTask(resp.TaskId, taskConfig)
 		}

@@ -49,7 +49,7 @@ func NewPokeballPluginManager(conn grpc.ClientConnInterface) *PluginManager {
 
 	registerConfig := proto_struct.RegisteredConfig{}
 	if err := json.Unmarshal([]byte(registerConfigReply.RegisteredConfig), &registerConfig); err != nil {
-		log.Errorf("err when heartbeat respPluginConfig %v %s", err, registerConfigReply.RegisteredConfig)
+		log.Errorf("err when heartbeat respPluginConfig on RegisteredConfig %v %s", err, registerConfigReply.RegisteredConfig)
 	}
 
 	if registerConfig.DebugMode == true {

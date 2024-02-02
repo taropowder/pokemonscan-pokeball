@@ -105,7 +105,7 @@ func main() {
 				mg := pokeball_manager.NewPokeballPluginManager(nil)
 				taskConfig := proto_struct.TaskConfig{PluginsConfig: make(proto_struct.TaskPluginConfig, 0)}
 				if err := json.Unmarshal(configJson, &taskConfig); err != nil {
-					log.Errorf("err when heartbeat respPluginConfig %v", err)
+					log.Errorf("err when heartbeat respPluginConfig on start %v", err)
 				}
 
 				mg.RunTask(taskConfig)

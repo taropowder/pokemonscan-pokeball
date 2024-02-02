@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
+	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"os"
 	"path/filepath"
@@ -15,6 +16,8 @@ import (
 	"strconv"
 	"strings"
 )
+
+const enscanConfigFileFormat = "enscan_config-%d.yml"
 
 type ENScanPlugin struct {
 	Name string
@@ -86,10 +89,19 @@ func (p *ENScanPlugin) Run(taskId int32, pluginConfig string) error {
 
 	mounts := make([]mount.Mount, 0)
 
+	cmdSlice := make([]string, 0)
+	cmdSlice = append(cmdSlice, []string{
+		"-json", "-o", "/tmp/res",
+		"-n", config.Target, "-type", config.Type,
+	}...)
+	if config.CommandArgs != "" {
+		cmdSlice = append(cmdSlice, strings.Split(config.CommandArgs, " ")...)
+	}
+
 	enscanConfigFile := ""
 	if config.ENScanConfigFile != "" {
 		var err error
-		enscanConfigFile, err = utils.WriteFileFromBase64(configDir, fmt.Sprintf(radConfigFileFormat, taskId), config.ENScanConfigFile)
+		enscanConfigFile, err = utils.WriteFileFromBase64(configDir, fmt.Sprintf(enscanConfigFileFormat, taskId), config.ENScanConfigFile)
 		if err != nil {
 			enscanConfigFile = ""
 		} else {
@@ -109,10 +121,8 @@ func (p *ENScanPlugin) Run(taskId int32, pluginConfig string) error {
 	})
 
 	containerConfig := &container.Config{
-		Image: plugin_proto.ENScanImageName,
-		Cmd: []string{"-json", "-o", "/tmp/res",
-			"-n", config.Target, "-type", config.Type,
-		},
+		Image:    plugin_proto.ENScanImageName,
+		Cmd:      cmdSlice,
 		Hostname: containerName,
 	}
 
@@ -149,7 +159,12 @@ func (p *ENScanPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeb
 		return nil, nil, err
 	}
 
-	defer os.Remove(resultDir)
+	defer func(path string) {
+		err := os.RemoveAll(path)
+		if err != nil {
+			log.Error(err)
+		}
+	}(resultDir)
 
 	for _, enscanResultFile := range enscanResultFiles {
 		fileBytes, err := os.ReadFile(enscanResultFile)
@@ -168,7 +183,13 @@ func (p *ENScanPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeb
 			extra := &pokeball.ExtraInfo{}
 			extra.Plugin = "ENScan"
 			extra.Short = app.Name
-			extra.Detail = app.Description
+			detail, err := json.Marshal(app)
+			if err != nil {
+				log.Error(err)
+				continue
+			} else {
+				extra.Detail = string(detail)
+			}
 			extra.Type = "app"
 			extras = append(extras, extra)
 		}
@@ -177,7 +198,13 @@ func (p *ENScanPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeb
 			extra := &pokeball.ExtraInfo{}
 			extra.Plugin = "ENScan"
 			extra.Short = icp.Domain
-			extra.Detail = icp.Icp
+			detail, err := json.Marshal(icp)
+			if err != nil {
+				log.Error(err)
+				continue
+			} else {
+				extra.Detail = string(detail)
+			}
 			extra.Type = "icp"
 			extras = append(extras, extra)
 
@@ -212,7 +239,13 @@ func (p *ENScanPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeb
 			extra := &pokeball.ExtraInfo{}
 			extra.Plugin = "ENScan"
 			extra.Short = wechat.Name
-			extra.Detail = wechat.Description
+			detail, err := json.Marshal(wechat)
+			if err != nil {
+				log.Error(err)
+				continue
+			} else {
+				extra.Detail = string(detail)
+			}
 			extra.Type = "wechat"
 			extras = append(extras, extra)
 		}
@@ -221,7 +254,13 @@ func (p *ENScanPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeb
 			extra := &pokeball.ExtraInfo{}
 			extra.Plugin = "ENScan"
 			extra.Short = weibo.Name
-			extra.Detail = weibo.Description
+			detail, err := json.Marshal(weibo)
+			if err != nil {
+				log.Error(err)
+				continue
+			} else {
+				extra.Detail = string(detail)
+			}
 			extra.Type = "weibo"
 			extras = append(extras, extra)
 		}
@@ -230,7 +269,13 @@ func (p *ENScanPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeb
 			extra := &pokeball.ExtraInfo{}
 			extra.Plugin = "ENScan"
 			extra.Short = enterpriseInfo.Name
-			extra.Detail = enterpriseInfo.Scope
+			detail, err := json.Marshal(enterpriseInfo)
+			if err != nil {
+				log.Error(err)
+				continue
+			} else {
+				extra.Detail = string(detail)
+			}
 			extra.Type = "enterprise"
 			extras = append(extras, extra)
 		}
