@@ -11,7 +11,7 @@ ADD https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb /a
 
 RUN apt-get update
 
-RUN apt install -y unzip curl net-tools iputils-ping git && \
+RUN apt install -y unzip curl net-tools iputils-ping git python3 && \
     apt install -y ./google-chrome-stable_current_amd64.deb
 
 RUN mkdir /app/res

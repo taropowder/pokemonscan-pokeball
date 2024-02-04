@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
+	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"io/ioutil"
 	"os"
@@ -38,6 +39,27 @@ func (p *NucleiPlugin) Run(taskId int32, pluginConfig string) error {
 
 	config := plugin_proto.NucleiConfig{}
 	if err := json.Unmarshal([]byte(pluginConfig), &config); err != nil {
+		return err
+	}
+
+	parts := strings.Split(config.CommandArgs, " ")
+
+	targetUrl := ""
+	// 遍历分割后的子字符串
+	for i := 0; i < len(parts); i++ {
+		// 判断子字符串是否为 "-u"
+		if parts[i] == "-u" && i+1 < len(parts) {
+			// 获取 "-u" 后面的参数
+			param := parts[i+1]
+			// 打印找到的参数
+			targetUrl = param
+			break
+		}
+	}
+
+	_, _, _, _, err := utils.GetUrlInfo(targetUrl, "")
+	if err != nil {
+		log.Errorf("error for get resp for %s : %v", targetUrl, err)
 		return err
 	}
 
@@ -78,7 +100,7 @@ func (p *NucleiPlugin) Run(taskId int32, pluginConfig string) error {
 		},
 	}
 
-	err := docker.WaitForRun(containerConfig, hostConfig, nil, containerName)
+	err = docker.WaitForRun(containerConfig, hostConfig, nil, containerName)
 	if err != nil {
 		return err
 	}
