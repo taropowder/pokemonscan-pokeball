@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-ARG version=2.9.2
+ARG version=3.1.10
 WORKDIR /app
 
 ADD https://github.com/projectdiscovery/nuclei/releases/download/v${version}/nuclei_${version}_linux_amd64.zip /app
@@ -11,7 +11,7 @@ ADD https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb /a
 
 RUN apt-get update
 
-RUN apt install -y unzip curl net-tools iputils-ping git && \
+RUN apt install -y unzip curl net-tools iputils-ping git python3 && \
     apt install -y ./google-chrome-stable_current_amd64.deb
 
 RUN mkdir /app/res
