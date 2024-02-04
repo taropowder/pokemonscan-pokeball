@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-ARG version=2.9.2
+ARG version=3.1.10
 WORKDIR /app
 
 ADD https://github.com/projectdiscovery/nuclei/releases/download/v${version}/nuclei_${version}_linux_amd64.zip /app
