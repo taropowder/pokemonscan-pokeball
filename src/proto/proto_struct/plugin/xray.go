@@ -8,4 +8,5 @@ const (
 type XrayConfig struct {
 	CommandArgs string `json:"command_args"`
 	ConfigFile  string `json:"config_file"`
+	Alive       bool   `json:"alive"`
 }

@@ -164,13 +164,29 @@ func (p *XrayPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokebal
 			})
 
 			for _, w := range v.Web {
+
+				title := w.Title
+				url := w.Link
+				respHash := ""
+				statusCode := w.Status
+				respLength := 0
+				if config.Alive {
+					respHash, statusCode, title, respLength, err = utils.GetUrlInfo(url, "")
+					if err != nil {
+						continue
+					}
+				}
+
 				websites = append(websites, &pokeball.WebsiteInfo{
-					Url:        w.Link,
-					Plugin:     fmt.Sprintf("%s-%s", v.VerboseName, plugin_proto.XrayPluginName),
-					Title:      w.Title,
-					StatusCode: int32(w.Status),
+					Url:        fmt.Sprintf("http://%s", w),
+					Title:      title,
+					StatusCode: int32(statusCode),
+					RespHash:   respHash,
+					Length:     int32(respLength),
 					Server:     w.Server,
+					Plugin:     fmt.Sprintf("%s-%s", v.VerboseName, plugin_proto.XrayPluginName),
 				})
+
 			}
 		}
 
