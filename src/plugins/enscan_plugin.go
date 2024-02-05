@@ -36,23 +36,23 @@ type ENScanResult struct {
 		Version     interface{} `json:"version"`
 	} `json:"app"`
 	EnterpriseInfo []struct {
-		Address           string `json:"address"`
-		Email             string `json:"email"`
-		IncorporationDate string `json:"incorporation_date"`
-		LegalPerson       string `json:"legal_person"`
-		Name              string `json:"name"`
-		Phone             string `json:"phone"`
-		Pid               int    `json:"pid"`
-		RegCode           string `json:"reg_code"`
-		RegisteredCapital string `json:"registered_capital"`
-		Scope             string `json:"scope"`
-		Status            string `json:"status"`
+		Address           string      `json:"address"`
+		Email             string      `json:"email"`
+		IncorporationDate string      `json:"incorporation_date"`
+		LegalPerson       string      `json:"legal_person"`
+		Name              string      `json:"name"`
+		Phone             string      `json:"phone"`
+		Pid               interface{} `json:"pid"`
+		RegCode           string      `json:"reg_code"`
+		RegisteredCapital string      `json:"registered_capital"`
+		Scope             string      `json:"scope"`
+		Status            string      `json:"status"`
 	} `json:"enterprise_info"`
 	Icp []struct {
 		CompanyName interface{} `json:"company_name"`
 		Domain      string      `json:"domain"`
 		Icp         string      `json:"icp"`
-		Website     []string    `json:"website"`
+		Website     interface{} `json:"website"`
 		WesbiteName string      `json:"wesbite_name"`
 	} `json:"icp"`
 	Wechat []struct {
@@ -220,14 +220,30 @@ func (p *ENScanPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeb
 				Root:   true,
 			})
 
-			for _, w := range icp.Website {
+			if websiteSlice, ok := icp.Website.([]interface{}); ok {
+				for _, w := range websiteSlice {
+					respHash, statusCode, title, respLength, err := utils.GetUrlInfo(
+						fmt.Sprintf("http://%s", w), "")
+					if err != nil {
+						continue
+					}
+					websites = append(websites, &pokeball.WebsiteInfo{
+						Url:        fmt.Sprintf("http://%s", w),
+						Title:      title,
+						StatusCode: int32(statusCode),
+						RespHash:   respHash,
+						Length:     int32(respLength),
+						Plugin:     "ENScan",
+					})
+				}
+			} else if wb, ok := icp.Website.(string); ok {
 				respHash, statusCode, title, respLength, err := utils.GetUrlInfo(
-					fmt.Sprintf("http://%s", w), "")
+					fmt.Sprintf("http://%s", wb), "")
 				if err != nil {
 					continue
 				}
 				websites = append(websites, &pokeball.WebsiteInfo{
-					Url:        fmt.Sprintf("http://%s", w),
+					Url:        fmt.Sprintf("http://%s", wb),
 					Title:      title,
 					StatusCode: int32(statusCode),
 					RespHash:   respHash,
