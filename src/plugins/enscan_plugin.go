@@ -42,7 +42,7 @@ type ENScanResult struct {
 		LegalPerson       string `json:"legal_person"`
 		Name              string `json:"name"`
 		Phone             string `json:"phone"`
-		Pid               string `json:"pid"`
+		Pid               int    `json:"pid"`
 		RegCode           string `json:"reg_code"`
 		RegisteredCapital string `json:"registered_capital"`
 		Scope             string `json:"scope"`
@@ -52,7 +52,7 @@ type ENScanResult struct {
 		CompanyName interface{} `json:"company_name"`
 		Domain      string      `json:"domain"`
 		Icp         string      `json:"icp"`
-		Website     string      `json:"website"`
+		Website     []string    `json:"website"`
 		WesbiteName string      `json:"wesbite_name"`
 	} `json:"icp"`
 	Wechat []struct {
@@ -176,6 +176,7 @@ func (p *ENScanPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeb
 
 		err = json.Unmarshal(fileBytes, &res)
 		if err != nil {
+			log.Errorf("enscan error %v", err)
 			continue
 		}
 
@@ -219,19 +220,21 @@ func (p *ENScanPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokeb
 				Root:   true,
 			})
 
-			respHash, statusCode, title, respLength, err := utils.GetUrlInfo(
-				fmt.Sprintf("http://%s", icp.Website), "")
-			if err != nil {
-				continue
+			for _, w := range icp.Website {
+				respHash, statusCode, title, respLength, err := utils.GetUrlInfo(
+					fmt.Sprintf("http://%s", w), "")
+				if err != nil {
+					continue
+				}
+				websites = append(websites, &pokeball.WebsiteInfo{
+					Url:        fmt.Sprintf("http://%s", w),
+					Title:      title,
+					StatusCode: int32(statusCode),
+					RespHash:   respHash,
+					Length:     int32(respLength),
+					Plugin:     "ENScan",
+				})
 			}
-			websites = append(websites, &pokeball.WebsiteInfo{
-				Url:        fmt.Sprintf("http://%s", icp.Website),
-				Title:      title,
-				StatusCode: int32(statusCode),
-				RespHash:   respHash,
-				Length:     int32(respLength),
-				Plugin:     "ENScan",
-			})
 
 		}
 
