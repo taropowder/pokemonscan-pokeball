@@ -178,7 +178,7 @@ func (p *XrayPlugin) GetResult(taskId int32) (*pokeball.ReportInfoArgs, *pokebal
 				}
 
 				websites = append(websites, &pokeball.WebsiteInfo{
-					Url:        fmt.Sprintf("http://%s", w),
+					Url:        url,
 					Title:      title,
 					StatusCode: int32(statusCode),
 					RespHash:   respHash,
