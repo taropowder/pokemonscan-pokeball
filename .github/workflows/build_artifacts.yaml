@@ -9,7 +9,12 @@ on:
 jobs:
   pokeball:
     # runs-on 指定job任务运行所需要的虚拟机环境(必填字段)
-    runs-on: ubuntu-latest
+#    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: [ 1.22.x ]
+        os: [ ubuntu-latest ]
+    runs-on: ${{ matrix.os }}
     # Use a container with GLIBC 2.17
     container: quay.io/pypa/manylinux2014_x86_64
     timeout-minutes: 30
@@ -19,7 +24,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v1
         with:
-          go-version: 1.19
+          go-version: 1.21
       - name: Checkout
         uses: actions/checkout@v3
         with:
