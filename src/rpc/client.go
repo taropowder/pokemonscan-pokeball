@@ -32,7 +32,7 @@ func InitRpcClient(rootCtx context.Context, address string) {
 
 	creds := credentials.NewTLS(&tls.Config{
 		Certificates: []tls.Certificate{cert},
-		ServerName:   "pokemon.go",
+		ServerName:   conf.ConfigureInstance.TlsServerName,
 		RootCAs:      certPool,
 	})
 

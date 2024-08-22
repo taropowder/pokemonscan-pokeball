@@ -38,6 +38,12 @@ func main() {
 					Required: true,
 					Usage:    "server address",
 				},
+				cli.StringFlag{
+					Name:        "tlsServerName,tsn",
+					Required:    false,
+					Usage:       "tlsServerName address",
+					Destination: &conf.ConfigureInstance.TlsServerName,
+				},
 				cli.BoolFlag{
 					Name:        "debug,d",
 					Required:    false,
